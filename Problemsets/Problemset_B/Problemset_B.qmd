@@ -1,0 +1,281 @@
+---
+title: "STA130 - Week 2 Problem Set (Winter 2025) Sample Solutions"
+author: "YOUR NAME (Instructors: Nathalie Moon and Morris Greenberg)"
+format: pdf
+editor: visual
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(cowplot)
+library(openintro)
+```
+
+# Problem Set Objectives
+
+The weekly problem sets are designed to do the following:
+
+-   Provide structured practice with immediate feedback, allowing students to identify and correct misconceptions early
+-   Build practical data analysis skills through hands-on experience with R, reinforcing statistical concepts through active application
+-   Develop reproducible workflow habits, namely through the use of Quarto to combine code, output, and text.
+
+# Instructions
+
+## How do I check my work
+
+You will access the Problem Set and do your work on [JupyterHub](https://r.datatools.utoronto.ca/user/nathalie.moon@utoronto.ca/git-pull?repo=https%3A%2F%2Fgithub.com%2Fnathaliemoon%2FSTA130-W25.git&urlpath=rstudio%2F&branch=main&redirects=1).
+
+When you click `Render` to create a pdf of your solutions, you may get a popup that says "Popup Blocked - We attempted to open an external browser window...". If you get this message, click `Cancel` and then you will be able to open your .pdf file by selecting it in the bottom right window (in the same folder as your .qmd file).
+
+Once you are done with a question and want to check if it is correct, you will need to download your .qmd and .pdf files and upload them to MarkUs to run the tests.
+
+Usually when you do an assignment, you don't find out whether your answers are correct until *after* the deadline, when you get your grade back. However, using MarkUs, you can submit your work before the deadline and run tests to check your solutions!
+
+*Note:* Some parts of some questions may not be covered by tests in MarkUs, but you're still responsible for reviewing the posted solutions and make sure you understand them.
+
+**To download your files from JupyterHub, go to the bottom right window and do the following:**
+
+-   Select the files you want to download (likely .qmd and .pdf)
+-   Click on More $\Rightarrow$ Export
+
+**To upload your work to MarkUs to run the tests:**
+
+-   Go to MarkUs: <https://markus.teach.cs.toronto.edu/markus/courses>
+-   Open the current assignment and upload your file(s) (note that by default, the files you download from JupyterHub will likely be in your `Downloads` folder)
+-   Run the tests
+
+## What to do if a test fails on MarkUs
+
+-   Take a deep breath! Your work won't really be graded until the deadline, so start early to make sure you have lots of time to resolve issues before the deadline.
+-   Read the message to get hints about what the problem is. For example "variable X not present" means that you may have a typo in your variable name.
+-   Search on Piazza to see if other classmates have encountered a similar error (and if not, consider posting a screenshot of the error message)
+-   Come to TA or instructor office hours with your issue
+
+## How do I submit my Problem Set?
+
+You will submit your solutions (.qmd and .pdf) on MarkUs at the link above. You can submit as many times as you like but only your latest submission will be counted.
+
+\newpage
+
+# Question 1
+
+The `artwork_sample.csv` file contains data for a sample of pieces of art owned by the Tate Art Museum. While more variables are available on the Tate Art Museum's site (github.com/tategallery/collection), you will only be working with the variables featured in the `artwork_sample.csv` file (see below). Save this data object in an R object called `artwork`.
+
+-   `id`: Unique ID for each piece of artwork
+-   `artist`: Name of the artist
+-   `title`: Title of the artwork
+-   `type`: Medium used
+-   `year`: Year the artwork was created
+-   `width`: width of the artwork, in mm
+-   `height`: height of the artwork, in mm
+-   `units`: measurement units for width and height of the artwork
+-   `area`: surface area (in squared cm)
+
+```{r, message=FALSE}
+library(tidyverse)  # load the tidyverse package so it is available to use 
+artwork <- read_csv("artwork_sample.csv")  # read in the data
+
+# We'll remove pieces of art with missing values for year of acquisition - you don't need to know what this code is doing exactly, we'll cover it in week 3.
+artwork <- artwork |> filter(!is.na(acquisitionYear))
+```
+
+## (a) Use the `glimpse()` function to view properties of the `artwork` data set. How many observations does it include? How many variables are measured for each observation? Replace `NULL` with your answers in the code chunk below to save your answers in `Q1a_number_of_variables` and `Q1a_number_of_observations`.
+
+```{r}
+glimpse(artwork)
+
+Q1a_number_of_variables <- NULL
+Q1a_number_of_variables
+
+Q1a_number_of_observations <- NULL
+Q1a_number_of_observations
+```
+
+**Write 1-2 sentences describing the sample using this information and the context.**
+
+*\<Type your answer to the written question here (note that R code does not run outside of the grey R code chunks).\>*
+
+## (b) Create three histograms to explore the distribution of acquisition year for this sample of pieces of art: (i) one with 3 bins, (ii) one with 18 bins, and (iii) one with 100 bins; make sure to specify meaningful axis labels where appropriate. Which of these histograms is most appropriate to describe the distribution of the artworks' years of creation? Why? Write a few sentences describing the distribution based on the histogram you chose as most appropriate.
+
+```{r}
+# Explain how you can save plots as objects and then print them to display
+
+# Create your plots below
+Q1b_hist_years_3bins <- NULL
+Q1b_hist_years_18bins <- NULL
+Q1b_hist_years_100bins <- NULL
+
+Q1b_hist_years_3bins
+Q1b_hist_years_18bins
+Q1b_hist_years_100bins
+
+## The plot_grid function from the cowplot library allows you to arrange plots
+## in a grid formation, by specifying the names of the plot objects and the number
+## of columns (ncol)
+library(cowplot)
+cowplot::plot_grid(Q1b_hist_years_3bins, Q1b_hist_years_18bins, Q1b_hist_years_100bins, ncol=3)
+```
+
+**Which histogram is most appropriate to visualize these data?**
+
+## (c) Describe the distribution of year of acquisition of artwork based on the histogram(s) you produced in part (b).
+
+## (d) Construct a boxplot to visualize the distribution of years of acquisition in a different way.
+
+```{r}
+# Create your plot below and save it in the Q1c_plot R object
+Q1d_plot <- NULL
+
+Q1d_plot
+
+cowplot::plot_grid(Q1b_hist_years_18bins, Q1d_plot)
+```
+
+## (e) If you only had the boxplot to work with (from part d), what would you conclude about the distribution of acquisition years? How does this compare to what the histogram from part b reveals?
+
+## (f) Construct a plot to visualize the distribution of the `type` variable. Make sure to specify meaningful axis labels where appropriate. Hint: If a categorical variable with many different categories, you may find it useful to use `coord_flip()` to flip the bars horizontally and/or change the options in the R code chunk to make the plot large (ex: `{r, fig.height=15, fig.width=5}`). From the choices below, select the best description for the distribution of the `type` variable.
+
+```{r}
+# Replace NULL by the code to create your plot and save it in the Q1f_plot 
+# R object
+Q1f_plot <- NULL
+
+Q1f_plot # This line of code will make your plot appear in the bottom right
+         # panel under the "plots" tab
+
+# Among the four descriptions below, decide which one is most accurate 
+# and replace NULL with "A", "B", "C" or "D" accordingly
+Q1f_description <- NULL
+
+```
+
+**A**: There are about twice as many line engravings than photographs, and almost twice as many photographs than watercolours. The most common type of artwork in this sample of 1000 is watercolour.
+
+**B**: There are about twice as many photographs than line engravings, and almost twice as many watercolours than photographs. The most common type of artwork in this sample of 1000 is watercolour.
+
+**C**: The distribution of artwork type is not symmetrical. The center of the distribution is photograph because it appears in the middle.
+
+**D**: The distribution of artwork type is left skewed because there are fewer line engravings than photographs and watercolours. The most common type of artwork in this sample is watercolour.
+
+## (g) Construct a set of three boxplots showing visual summaries of the distribution of an artwork's height (`height`) for each type of artwork (`type`); make sure to specify meaningful axis labels where appropriate. Save your figure in an R object called `Q1g_plots` . The 3 boxplots should be side by side, not one on top of the other.
+
+```{r}
+# Create your plots below, in a single R object (that is, a single call to ggplot())
+Q1g_plots <- NULL
+
+Q1g_plots
+```
+
+**Write 3-4 sentences comparing these distributions.**
+
+## (h) Make a scatterplot showing the `width` versus `height` for each type of artwork (`type`) using the `facet_wrap()` option; make sure to specify meaningful axis labels where appropriate.
+
+```{r}
+# Create your plot below
+Q1h_plots <- NULL
+
+Q1h_plots
+```
+
+**Write 1-3 sentences describing any trends you see.**
+
+\newpage
+
+# Question 2
+
+The `births14` data set is part of the `openintro` package. It consists of observations for a sample of 1000 births in the United States in 2014. The code below loads the required libraries for this question and provides a glimpse of the `births14` data frame.
+
+```{r, include=FALSE}
+library(tidyverse)
+library(openintro)
+```
+
+```{r}
+glimpse(births14)
+```
+
+## (a) Type `?births14` in the R console (bottom left panel, NOT the top left panel) to answer the questions below. Make sure not to change the variable names, and replace each `NULL` with your answer.
+
+```{r}
+# What is the name of the variable with the following definition: 
+# "Number of hospital visits during pregnancy." 
+# Make sure that your answer is in quotation marks here, and 
+# remember that R is case sensitive!
+Q2a_variable1 <- NULL
+
+
+# What is the name of the variable with the following definition: 
+# "Whether the birth was classified as premature or full-term." 
+# Make sure that your answer is in quotation marks here, and 
+# remember that R is case sensitive!
+Q2a_variable2 <- NULL
+
+```
+
+## (b) Before even doing any analysis, it is good to consider whether the data in question might have any strong bias that could impact any conclusions you may draw. Based on the information contained documentation (particularly in `Description` and `Source`), please write 3-4 sentences either (1) arguing the dataset should be generally unbiased and representative of all births in the United States or, if not, (2) what potential issues there might be with the data.
+
+## (c) Choose two categorical variables and plot their distributions. Identify whether each of these variables is a nominal or ordinal categorical variable. Write one or two sentences interpreting each plot.
+
+```{r, warning=FALSE, message=FALSE, fig.height=3, fig.width=4, fig.align='center'}
+# Create your plots below and save them in the R objects Q2c_plot1 and Q2c_plot2
+Q2c_plot1 <- NULL
+Q2c_plot2 <- NULL
+
+
+Q2c_plot1
+Q2c_plot2
+```
+
+## (d) Consider the variable `weight`. Replace NULL below with the type of this variable (either "continuous numerical", "discrete numerical", "nominal categorical", "nominal ordinal", or "binary"). Create a plot to visualize the distribution and write 2-3 sentences describing the distribution.
+
+```{r, warning=FALSE, message=FALSE, fig.width=3, fig.height=2, fig.align='center'}
+# What is the type of this variable? 
+# Hint: Replace NULL below with the correct option above, making sure to copy exactly and to include quotation marks
+Q2d_variable_type <- NULL
+
+# Create your plot below
+Q2d_plot <- NULL
+
+Q2d_plot
+```
+
+## (e) Construct a plot that shows the relationship between birth weight (`weight`) and mother's smoking status (`habit`); make sure to specify meaningful axis labels where appropriate.
+
+```{r}
+# Create your plot below
+Q2e_plot <- NULL
+
+Q2e_plot
+```
+
+## (f) Based on your plot, would you conclude that there is a strong association, weak association, or no association between birth weight (`weight`) and mother's smoking status (`habit`)? Why or why not?
+
+## (g) Sometimes, a potential association could be due factors that affect both variables. These are called *confounding variables* (we will discuss these in more detail later in the course). In @fig-Q2g, you'll find two plots showing the relationship between mothers' smoking status, whether the baby was premature or full-term, and birthweight.
+
+```{r}
+#| label: fig-Q2g
+#| fig-cap: "Q2g plots"
+#| fig-subcap:
+#|   - "Proportion of births that were classified as premature or full-term 
+#|   (`premie`), by mothers' smoking status (`habit`)"
+#|   - "Boxplots of baby weights by mother's smoking status (`habit`) and whether 
+#|   the baby was premature or full-term (`premie`)"
+#| layout-ncol: 2
+
+births14 %>% ggplot(aes(x = habit, fill=premie)) + 
+  geom_bar(position="fill") + 
+  labs(x="Mother's smoking Status")
+
+
+births14 %>% ggplot(aes(x=habit, y=weight, fill=premie)) +
+  geom_boxplot() +
+  labs(x="Mother's smoking status", y="Weight (in pounds)")
+```
+
+**Do the above plot suggest that a mother's smoking habit could lead to premature births? Why or why not?**
+
+## (h) In general, common medical advice for women who are pregnant or expect to become pregnant is to stop smoking to protect the health of their baby. Based on your plot and answer above, pleased write 2-4 sentences discussing whether this advice seems justified or not.
+
+We hope this exercise helped to emphasize the importance of the ethical considerations we discussed in class when it comes to making, interpreting, and communicating data visualizations.
+
