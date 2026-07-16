@@ -1,0 +1,42 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+\newpage
+
+# Question 4 (you'll use your answers to this question in this week's Friday tutorial)
+
+In this question, you will identify different types of variables using data you might collect about university students. Consider the following variables that might be measured for each student:
+
+-   Age (in years)
+
+-   Year of study (1st year, 2nd year, 3rd year, 4th year)
+
+-   Major (Statistics, Computer Science, Economics, etc.)
+
+-   Number of courses taken this semester
+
+-   Height (in centimeters)
+
+-   Has a part-time job (Yes/No)
+
+-   Student ID number (e.g., 1008765432)
+
+-   Course rating on a scale of 1-10 (where 1 = terrible, 10 = excellent)
+
+-   T-shirt size (Small, Medium, Large, X-Large)
+
+For each variable below, identify whether it is quantitative (numerical) or categorical. If quantitative, specify whether it's discrete or continuous. If categorical, specify whether it's nominal, ordinal, or binary. For each variable, rate how confident you are in your answer (note: there may be more than one correct answer here, and you'll discuss these further in tutorial).
+
+| Variable | Type of Variable | Your confidence level (very confident / somewhat confident / not at all confident) |
+|----|----|----|
+| Age |  |  |
+| Year of study |  |  |
+| Major |  |  |
+| Number of courses taken this semester |  |  |
+| Height |  |  |
+| Student ID number |  |  |
+| Course rating (from 1-10) |  |  |
+| T-shirt size |  |  |

@@ -1,0 +1,106 @@
+---
+title: "STA130 Week 1 Class Supplementary Materials"
+author: "Nathalie Moon"
+format: pdf
+editor: visual
+---
+
+# Supplementary materials and R Code
+
+## What to do when you first open a new Quarto (.qmd) document like this
+
+Render it, just to make sure it works! To do this, click on "Render" at the top of this window. This should generate a .pdf file, saved in the same folder (aka directory) as the .qmd file. If you don't get a pdf file, make sure that at the top of your .qmd file, it says `format: pdf` and that you have the `editor: visual` line as well.
+
+## Source vs Visual editor
+
+You can go back and forth between the "source" editor and "visual" editor by clicking on the "Source" or "Visual" buttons at the top left of the window. It is your choice to use the source or visual editor - personally I go back and forth because some things are easier to do in the visual editor (e.g. text formatting: bold, italic, inserting tables, etc) and some things are easier to do in the source editor (more advanced code chunk options).
+
+## Using R as a calculator
+
+You can use R as a calculator by typing one line at a time in the 'Console' window (bottom left panel) and pressing Enter. Try doing the calculations in the console:
+
+-   What is 5 + 2?
+-   What is 2\^3?
+-   What does `x <- 7 - 2` do?
+-   What does `c(1,2,3) * 2` do?
+-   What does `length(c("a","b","c))` do?
+
+We could also insert a new R code chunk by clicking on the green plus sign in the top right corner of this panel. When we write code in a code chunk, we can save it (this is how you'll work on your problem sets!)
+
+## Install and load packages
+
+We will use the tidyverse package often. If you're working on Jupyterhub it should already be downloaded, but if you're on your own computer you'll need to download it the first time with `install.packages("tidyverse")`.
+
+In the code chunk below, we'll install the `tidyverse` package using `install.packages("tidyverse")` and then open it using the `library(tidyverse)` command.
+
+```{r, include=FALSE}
+# The `include=FALSE` option above just suppresses the code chunk and messages 
+# from being shown in the final document
+# install.packages("tidyverse") # you need to run this line if the package isn't 
+# already installed
+library(tidyverse)
+```
+
+## Loading data in R
+
+### Built-in datasets
+
+Some packages include data, so you don't need to load it, you can just access it!
+
+Here are two functions that are useful when you start working with new data:
+
+-   `glimpse()`
+
+-   `slice()`
+
+In both cases, you need to put the name of the dataset object in the parentheses (note that R is case sensitive)
+
+One dataset available in R is called `Orange` and it has data on the growth of orange trees
+
+When a dataset is available in R, you can get information about it by typing `?` and then its name
+
+```{r}
+# Lines that start with a hashtag symbol are comments and won't be run 
+# Get information about the built in dataset called Orange
+#?Orange
+
+# Look at the data using glimpse() and slice()
+glimpse(Orange)
+slice(Orange, 1:5)
+```
+
+\newpage
+
+## Loading data from a file (e.g. .csv)
+
+You can also load data from a file (e.g. `.csv` spreadsheet) which is saved in your working folder on JupyterHub using the `read_csv()` function, with the filename specified in the parentheses, in quotation marks.
+
+In the R code chunk below, use the `read_csv()` function to read in the ".csv" file
+
+```{r}
+student_data <- read_csv("students.csv")
+```
+
+\newpage
+
+When you run `read_csv()` you often get warnings in red, but in general this isn't a problem - it's just R guessing what type each variable has
+
+```{r}
+student_data
+slice(student_data, 1:5)
+
+# How many variables are there?
+# How many observations are there?
+# What is the name of the first variable?
+# What is the major of the 3rd student?
+# What types of variables do we have in these data?
+
+# It can also be useful to look at data using `glimpse()`, especially when there are lots of variables
+glimpse(student_data)
+```
+
+\newpage
+
+```{r}
+glimpse(student_data)
+```
