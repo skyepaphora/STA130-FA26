@@ -46,7 +46,7 @@ If you do not already have a GitHub account:
 
 # Step 2: Open the class repository
 
-Your instructor will provide a link to the course repository: 
+Your instructor will provide a link to the course repository: https://github.com/emilysomerset/STA130-FA26/tree/main/RDemos/Version%20control%20Demo%20(Github)
 
 Open the repository, then click on the shared file: `students.qmd`.
 
