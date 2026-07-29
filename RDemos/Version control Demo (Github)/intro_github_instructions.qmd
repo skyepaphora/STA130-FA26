@@ -1,0 +1,123 @@
+---
+title: "Instructions"
+format: pdf
+editor: source
+---
+
+# Git & GitHub: First Contact
+
+Welcome to your first experience with **Git** and **GitHub**!
+
+GitHub is used by software developers, researchers, and data scientists to collaborate on projects without overwriting each other's work. Today you'll learn the same workflow used on real collaborative projects.
+
+This activity takes about **20–30 minutes** and can be completed entirely in your web browser.
+
+By the end of this activity, you will have:
+
+- Created a GitHub account (if needed)
+- Made your first edit to a shared repository
+- Submitted your changes as a **pull request**
+- Seen how pull requests are merged
+
+## Before you begin
+
+You'll see some new terminology today, including **repository**, **fork**, **commit**, **pull request**, and **merge**. Don't worry about memorizing these terms yet—the goal is to experience the workflow first.
+
+| You will... | GitHub term |
+|-------------|-------------|
+| Make your own copy of a repository | **Fork** |
+| Save your changes | **Commit** |
+| Ask to include your changes | **Pull request** |
+| Accept the changes | **Merge** |
+
+---
+
+# Step 1: Create a GitHub account
+
+If you do not already have a GitHub account:
+
+1. Go to <https://github.com>.
+2. Click **Sign up** and follow the prompts.
+3. Verify your email address if prompted.
+
+> **Tip:** Choose a username that you would be happy to use professionally. Many students include their GitHub profile in job or graduate school applications.
+
+---
+
+# Step 2: Open the class repository
+
+Your instructor will provide a link to the course repository: 
+
+Open the repository, then click on the shared file: `students.qmd`.
+
+---
+
+# Step 3: Fork the repository
+
+You do not have permission to edit the course repository directly. Instead, GitHub will create your own personal copy, called a **fork**.
+
+1. Click the **pencil** icon.
+2. When prompted, click **Fork this repository**.
+3. GitHub will create your copy and open the file for editing.
+
+From this point on, you're editing your own copy of the repository.
+
+---
+
+# Step 4: Edit the file
+
+Add your own row to the table using the same format as the existing entries.
+
+For example:
+
+```text
+| Jane Doe | janedoe123 | Has climbed 3 mountains |
+```
+
+Include:
+
+- Your name
+- Your GitHub username
+- A fun fact about yourself
+
+Only add your own row—do not edit anyone else's.
+
+---
+
+# Step 5: Commit your changes
+
+Scroll to the bottom of the page.
+
+Under **Commit changes**, enter a short description of your edit (for example, `Add Jane Doe to student list`) and click **Propose changes**.
+
+A **commit** is simply a saved version of your work together with a message describing what changed.
+
+---
+
+# Step 6: Create a pull request
+
+GitHub will now show a page to create a **pull request**.
+
+A pull request asks the repository owner to review and merge your changes into the original repository.
+
+Click **Create pull request**.
+
+That's it! Your changes have been submitted.
+
+---
+
+# Step 7: Watch the merges
+
+Your instructor will demonstrate how pull requests are reviewed and merged into the shared repository, including what happens when multiple people edit the same line.
+
+---
+
+# What you learned
+
+Today you completed the basic GitHub workflow:
+
+**Fork → Edit → Commit → Pull Request → Merge**
+
+This is the same workflow used by software developers, researchers, and data scientists to collaborate on code, documents, and data.
+
+---

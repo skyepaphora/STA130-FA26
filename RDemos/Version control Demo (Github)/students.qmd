@@ -1,0 +1,12 @@
+---
+title: "Version control exercise"
+format: pdf
+editor: source
+---
+
+| Name | GitHub username | Fun fact |
+|------|-----------------|----------|
+|Emily Somerset | emilysomerset | I love statistics! |
+|Jane Doe | janedoe | I climbed 3 mountains |
+|Justin Slater | justinslater | kitties |
+
