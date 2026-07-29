@@ -1,0 +1,157 @@
+---
+title: "STA130 Week 1 Class Supplementary Materials"
+author: "Nathalie Moon and Emily Somerset"
+format: pdf
+---
+
+# Supplementary materials and R Code
+
+## What to do when you first open a new Quarto (.qmd) document like this
+
+Render it, just to make sure it works! To do this, click on "Render" at the top of this window. This should generate a .pdf file, saved in the same folder (aka directory) as the .qmd file. If you don't get a pdf file, make sure that at the top of your .qmd file, it says `format: pdf` and that you have the `editor: visual` line as well.
+
+## Source vs Visual editor
+
+You can go back and forth between the "source" editor and "visual" editor by clicking on the "Source" or "Visual" buttons at the top left of the window. It is your choice to use the source or visual editor - personally I go back and forth because some things are easier to do in the visual editor (e.g. text formatting: bold, italic, inserting tables, etc) and some things are easier to do in the source editor (more advanced code chunk options).
+
+## Using R as a calculator
+
+The Console (bottom left panel) is a great place to experiment with R. You can type one line of code at a time and press Enter to immediately see the result. Try doing the calculations in the console:
+
+-   What is 5 + 2?
+-   What is 2\^3?
+-   What does `x <- 7 - 2` do?
+-   What does `c(1,2,3) * 2` do?
+-   What does `length(c("a","b","c"))` do?
+
+We could also insert a new R code chunk by clicking on the green plus sign in the top right corner of this panel. When we write code in a code chunk, we can save it (this is how you'll work on your problem sets!)
+
+## Install and load packages
+
+We will use the tidyverse package often. If you're working on Jupyterhub it should already be downloaded, but if you're on your own computer you'll need to download it the first time with `install.packages("tidyverse")`.
+
+In the code chunk below, we'll install the `tidyverse` package using `install.packages("tidyverse")` and then open it using the `library(tidyverse)` command.
+
+```{r, include=FALSE}
+# The `include=FALSE` option above just suppresses the code chunk and messages 
+# from being shown in the final document
+# install.packages("tidyverse") # you need to run this line if the package isn't 
+# already installed
+library(tidyverse)
+```
+
+## Loading data in R
+
+### Built-in datasets
+
+Some packages include data, so you don't need to load it, you can just access it!
+
+Here are two functions that are useful when you start working with new data:
+
+-   `glimpse()`
+
+-   `slice()`
+
+In both cases, you need to put the name of the dataset object in the parentheses (note that R is case sensitive)
+
+One dataset available in R is called `Orange` and it has data on the growth of orange trees
+
+When a dataset is available in R, you can get information about it by typing `?` and then its name
+
+```{r}
+# Lines that start with a hashtag symbol are comments and won't be run 
+# Get information about the built in dataset called Orange
+#?Orange
+
+# Look at the data using glimpse() and slice()
+glimpse(Orange)
+slice(Orange, 1:5)
+```
+
+\newpage
+
+## Loading data from a file (e.g. .csv)
+
+You can also load data from a file (e.g. `.csv` spreadsheet) which is saved in your working directory on JupyterHub using the `read_csv()` function, with the filename specified in the parentheses, in quotation marks.
+
+In the R code chunk below, use the `read_csv()` function to read in the ".csv" file
+
+```{r}
+student_data <- read_csv("students.csv")
+```
+
+\newpage
+
+When you run `read_csv()` you often get warnings in red, but in general this isn't a problem - it's just R guessing what type each variable has
+
+```{r}
+student_data
+slice(student_data, 1:5)
+
+# How many variables are there?
+# How many observations are there?
+# What is the name of the first variable?
+# What is the major of the 3rd student?
+# What are the data types of the variables?
+
+# It can also be useful to look at data using `glimpse()`, especially when there are lots of variables
+glimpse(student_data)
+```
+
+\newpage
+
+```{r}
+glimpse(student_data)
+```
+
+## Tidy data
+
+Most of the tools in the tidyverse are designed to work with tidy datasets. When your data are tidy, tasks such as creating plots, calculating summaries, fitting models, and joining datasets become much simpler. Throughout this course, we'll often begin by making sure our data are tidy before doing any analysis. Recall that tidy data has one row per observational unit, one column per variable, and one value in each cell.
+
+Is the 'Orange' dataset tidy?
+
+```{r}
+slice(Orange, 1:20)
+```
+
+Is the 'student_data' dataset tidy?
+
+```{r}
+slice(student_data, 1:20)
+```
+
+What about this 'student2' dataset? Is it tidy?
+
+```{r}
+students2 <- read_csv("students2.csv")
+slice(students2, 1:10)
+```
+
+We'll learn about summarise() in Week 3, but even now we can see why this format is inconvenient. Suppose we wanted to quickly count how many data science majors and statistics majors we have in our data set. That is, we want to tabulate the values of the variable 'major'.
+
+With the original tidy data this is easily done!
+
+```{r}
+table(student_data$major)
+# We will do this in week 3 using group_by() and summarise() functions (later! )
+```
+
+With the non-tidy data, this requires multiple steps instead of a single command.
+
+```{r}
+# we can sum the number of 1s in each column
+
+sum(students2$statistics)
+sum(students2$data_science)
+```
+
+What about this 'student2' dataset? Is it tidy?
+
+```{r}
+students3 <- read_csv("students3.csv")
+slice(students3, 1:10)
+```
+
+You don't know the functions yet, but this non-tidy dataset already requires at least 4 steps just to count the number of Statistics and Data Science majors. It's also messy because the value column contains both numbers and text/characters, making it difficult to perform simple calculations, such as taking sums.
+
+Later in this course, you'll see that having columns that don't represent variables also makes data manipulation and statistical modelling much more difficult.

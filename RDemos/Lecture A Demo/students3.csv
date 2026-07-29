@@ -1,0 +1,17 @@
+first_name,last_name,variable,value
+Liu,Wei,student_number,73456
+Liu,Wei,major,Statistics
+Emily,Johnson,student_number,89213
+Emily,Johnson,major,Statistics
+Wang,Xin,student_number,60784
+Wang,Xin,major,Data Science
+Alex,Miller,student_number,45129
+Alex,Miller,major,Statistics
+Liu,Mei,student_number,56837
+Liu,Mei,major,Data Science
+Ryan,Thompson,student_number,92345
+Ryan,Thompson,major,Statistics
+Chen,Jie,student_number,31028
+Chen,Jie,major,Data Science
+Sarah,Davis,student_number,67591
+Sarah,Davis,major,Data Science
