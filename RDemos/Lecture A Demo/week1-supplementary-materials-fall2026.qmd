@@ -145,7 +145,7 @@ sum(students2$statistics)
 sum(students2$data_science)
 ```
 
-What about this 'student2' dataset? Is it tidy?
+What about this 'student3' dataset? Is it tidy?
 
 ```{r}
 students3 <- read_csv("students3.csv")
