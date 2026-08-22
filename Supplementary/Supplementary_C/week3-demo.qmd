@@ -1,0 +1,151 @@
+---
+title: "STA130 Week 3 - Data Wrangling"
+author: "Emily Somerset"
+format: pdf
+---
+
+```{r libraries, include=FALSE}
+library(tidyverse)
+library(openintro)
+library(ggplot2)
+```
+
+# Before this demo
+
+1. Start by reviewing the lecture material.
+2. Review the code in `week3-supplementary-materials.qmd`.
+3. Try these questions on your own!
+4. Watch the demo video for some additional guidance. :)
+
+# Load data
+
+```{r data_load}
+# Baby names (as seen in class)
+baby_names <- read_csv("babynames.csv")
+
+
+#install.packages("palmerpenguins")
+
+library(palmerpenguins)
+
+# ?palmerpenguins::penguins
+# The code above will open the help page, where you can find a description
+# of the penguins data set.
+
+```
+
+# filter()
+
+## Question 1 
+
+In 2018, what was the second-highest-ranked female baby name?
+
+```{r}
+
+```
+
+## Question 2
+
+In which year(s) was the name `"Eugene"` ranked among the top 20 names? What was its rank in each of those years?
+
+```{r}
+
+```
+
+## Question 3
+
+In which year(s) was the name `"Agnes"` ranked among the top 20 names?
+
+```{r}
+
+```
+
+## Question 4
+
+Create a bar plot of the top three female baby names since 2010. Interpret your plot.
+
+```{r}
+
+```
+
+# arrange() 
+
+## Question 1
+
+Create a table showing the top-ranked male baby name for each year from 2010 to 2020. Arrange the table in descending order by year.
+
+```{r}
+
+```
+
+## Question 2 
+
+For 2020, create a vector containing the top 20 male baby names in alphabetical order.
+
+```{r}
+
+```
+
+# summarise() and group_by()
+
+## Question 1
+
+Calculate the sample size and median bill length for each penguin species. Ignore missing values when calculating the median. Which species has the smallest observed median bill length?
+
+```{r}
+
+```
+
+## Question 2
+
+Create side-by-side boxplots of bill length for each penguin species. Make three observations based on the plot.
+
+```{r}
+
+```
+
+## Question 3
+
+Create boxplots of bill length for each penguin species, with the observations colour-coded by sex. Exclude observations with missing values for sex. Make two additional observations about the relationship between bill length and sex.
+
+```{r}
+
+```
+
+
+
+
+# mutate()
+
+
+## Question 1
+
+Create a histogram of the ratio of flipper length to bill length for Adelie penguins using 15 bins. Change both the fill colour and outline colour of the histogram.
+
+```{r}
+
+```
+## Question 2
+
+How many Adelie penguins are in the data set?
+
+Based on the histogram above, approximately what proportion of Adelie penguins have a flipper-to-bill length ratio less than or equal to 4.5?
+
+a) 50%  
+b) 25%  
+c) 5%  
+d) 2.5%
+
+Which answer is closest?
+
+```{r}
+
+```
+
+## Question 3
+
+Calculate the exact proportion of Adelie penguins that have a flipper-to-bill length ratio less than or equal to 4.5.
+
+```{r}
+
+```

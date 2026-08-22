@@ -1,0 +1,240 @@
+---
+title: "STA130 Week 3 - Data Wrangling"
+author: "Morris Greenberg"
+format: pdf
+editor: visual
+---
+
+## Data Wrangling
+
+In practice, data are often not clean and tidy. There could be typos (e.g., wrong/inconsistent spellings for character data, or misplaced decimals for numeric data), inconsistent use of units, rounding errors, missing entries, etc. In addition, even when data are clean, we could have reason to clean them further. Sometimes we prefer only examining a portion of the data for a statistical analysis (e.g., perhaps we have a question relating to only a subset of the data), or want to transform data to be compatible with our analysis (e.g., we have a character variable for passing letter grades for students between "D-" and "A+", and we would like to convert them to numbers between 50 and 100 in order to find the mean and variance of the data). *Data wrangling* is the practice of getting data into useful form for statistical analysis and visualizations. Below, we give guidance for data wrangling. This list is not exhaustive, but does consider (likely) a majority of your data wrangling needs.
+
+## Code for class slides
+
+### Loading Libraries
+
+We use the `tidyverse` for data wrangling (specifically the `dplyr` package within the `tidyverse`), and also load the `openintro` library to view US census data (in the summary statistics portion of this lecture).
+
+```{r libraries, include=FALSE}
+library(tidyverse)
+library(openintro)
+```
+
+### Data Wrangling
+
+We begin with the baby_names.csv file and use functions we will explain later on (`select` and `mutate`) to format the data into a nicer format for data analysis.
+
+```{r data_load}
+baby_names <- read_csv("babynames.csv")
+```
+
+As in previous classes, we can use the `glimpse` function to get a high-level view of the first few rows of data:
+
+```{r}
+glimpse(baby_names)
+```
+
+#### filter()
+
+The `filter` function allows you to keep only the rows of data that satisfy the condition specified (in this case, rows that refer to top ranked baby names in any year).
+
+```{r}
+most_popular <- baby_names |> filter(rank == 1)
+slice(most_popular, 1:6)
+
+# most_popular <- filter(baby_names, rank == 1)
+```
+
+Aside: observe the pipe `|>` allows for code to "read like a recipe". There is equivalent code commented out below it, which is much tougher to read (to understand the order of tasks in the commented out code, you need to go to the inner-most layer first, then the adjacent layer next, etc.). With the pipe, the order of tasks can be read sequentially.
+
+```{r}
+baby_names |> 
+  filter(rank == 1) |>
+  glimpse()
+
+#glimpse(filter(baby_names, rank == 1))
+
+```
+
+We can use logical operators such as `==`, `!=`, `>`, `<`, `>=`, `<=`, `%in%`(respectively meaning "equal to", "not equal to", "greater than", "less than", "greater than or equal to", "less than or equal to", "in") to specify what rows we are filtering, and `&` and `|` to combine logical statements with ANDs and ORs, respectively (note: the logical OR is separate than exclusive or, XOR).
+
+```{r}
+baby_names |> 
+  filter((rank == 1 | rank == 2) & sex == "female") |>
+  glimpse()
+
+
+baby_names |> 
+  filter((rank %in% c(1,2,11,12)) & sex == "female") |>
+  glimpse()
+
+
+```
+
+For AND operations in `filter`, you can either use `&` directly, or use 2 `filter` calls back-to-back:
+
+```{r}
+most_popular_boy_names <- baby_names |> 
+  filter(rank == 1 & sex == "male")
+glimpse(most_popular_boy_names)
+
+most_popular_boy_names <- baby_names |> 
+  filter(rank == 1) |>
+  filter(sex == "male")
+
+glimpse(most_popular_boy_names)
+```
+
+#### select()
+
+We now move on to the `select` function. This has a similar purpose as `filter`, but on the columns instead of rows. We show 3 uses below, the first to remove a specific variable by using the negative sign, the second to keep exactly 2 variables, and the third to keep all variables between 2 variables. Note in this case they all yield the same output because these data have 3 variables exactly.
+
+```{r}
+most_popular_boy_names <- most_popular_boy_names |> 
+  select(-sex)
+
+glimpse(most_popular_boy_names)
+
+```
+
+```{r}
+#Alternatives
+most_popular_boy_names <- most_popular_boy_names |> select(year, name)
+glimpse(most_popular_boy_names)
+most_popular_boy_names <- most_popular_boy_names |> select(year:name) 
+glimpse(most_popular_boy_names)
+
+baby_names |>
+  select(year:rank)
+```
+
+#### combining filter() and select()
+
+We now show a "recipe-like" data wrangling block of code using both `filter` and `select`.
+
+```{r}
+girls_names_top_5 <- baby_names |>
+  filter(sex == "female") |>
+	filter(rank <= 5) |>
+	select(-sex)
+glimpse(girls_names_top_5)
+```
+
+#### arrange()
+
+We also introduce `arrange` which allows us to sort the data by a variable or set of variables. If wanting to do a descending sort of a variable, wrap `desc()` function around it. As practice, how would you perform an `arrange` on 2 variables at once (in this case, see if you can output the `girls_names_top_5` dataset first sorted by rank in ascending order, and then sorted by year in descending order)?
+
+```{r}
+girls_names_top_5 |> 
+	arrange(desc(year)) |>
+  glimpse()
+
+girls_names_top_5 |> arrange(desc(year))
+```
+
+## Summary Statistics
+
+We now move on to showing how to create summary statistics within unique groups. For this, we use US Census Data from 2010, courtesy of the `openintro` package in R.
+
+```{r}
+# Example 2: US Census Data
+# https://www.openintro.org/data/index.php?data=gss2010
+survey <- gss2010 |> 
+  filter(!is.na(hrsrelax) & !is.na(mntlhlth) & !is.na(hrs1) & !is.na(degree) & !is.na(grass)) |>
+  rename(marijuana = grass,
+         hours_worked_per_week = hrs1,
+         mental_health = mntlhlth,
+         hours_relax_per_day = hrsrelax) |>
+  mutate(degree = as.character(degree)) |>
+  mutate(degree = ifelse(degree=="LT HIGH SCHOOL", yes="LESS THAN HIGH SCHOOL", no=degree))
+write_csv(survey, "us_general_social_survey_2010.csv")
+```
+
+```{r}
+survey <- read_csv("us_general_social_survey_2010.csv")
+glimpse(survey)
+```
+
+The `summarise` function allows us to calculate summary statistics quickly for any variable in a dataset. Below, we return a summary table with the number of rows in the data, as well as the mean hours worked per week.
+
+```{r}
+survey |>  
+  summarise(
+	n = n(),    
+	mean_work_hrs = mean(hours_worked_per_week))
+```
+
+Some useful functions that you can use within `summarise` as summary statistics: `mean`, `median`, `var`, `sd`, `min`, `max`, `quantile`, `iqr`, `first`, `last`, `nth`, `n`. As practice, try creating summary statistics with some of these (remember, you can use `?` to obtain the help page for a function, e.g., `?first`).
+
+The `summarise` function is especially powerful when paired with a `group_by`, in order to return summary statistics for every subgroup specified. Below, we extend the previous example to return the number of observations and mean hours worked per week within each type of degree.
+
+```{r}
+survey |> 
+  group_by(degree) |>  
+  summarise(
+    n = n(),
+    mean_work_hrs = mean(hours_worked_per_week))
+
+```
+
+Another important data wrangling function to introduce is `mutate` which allows us to create new variables in a data set based on formulas of existing variables. Below we create a relax:work ratio using `mutate`.
+
+```{r}
+survey <- survey |> 
+  mutate(ratio_relax_to_work = hours_relax_per_day * 7 / hours_worked_per_week)
+slice(survey, 1:5)
+
+```
+
+`mutate` can also be paired with `group_by` to populate a variable that is the same within each unique group.
+
+```{r}
+survey |>
+  group_by(degree) |>
+  mutate(mean_hrs_worked = mean(hours_worked_per_week),
+	   hrs_above_avg = hours_worked_per_week-mean_hrs_worked) |>
+  ungroup()|>
+  glimpse()
+
+```
+
+There are many useful functions to use within `mutate`, but one especially helpful one is `case_when`, which allows you to encode a variable for unique ranges of values for a variable. Below, we create a binary version of the hours worked per week variable using `case_when`.
+
+```{r}
+survey |>   
+  mutate(workload = case_when(
+    hours_worked_per_week <= 40 ~ "40h or less",
+    hours_worked_per_week > 40 ~ "more than 40h")) |>
+  group_by(workload) |>  
+  summarise(n = n(),        
+            prop_approve = sum(marijuana == "LEGAL") / n)
+
+```
+
+A final note is that it is also possible to mutate or summarize multiple columns in the same way simultaneously. Feel free to examine the `mutate_at` and `summarise_at` functions and try creating an example dataset that uses these.
+
+## Example from Class
+
+Q: In what year(s) was the name "Nathalie" in the top 15 names?
+
+```{r}
+baby_names |> 
+  filter(name == "Nathalie") |>
+  filter(rank <= 15) |>
+  pull(year)
+
+baby_names |> 
+  filter(name == "Nathalie" | name=="Natalie") |>
+  filter(rank <= 15) |>
+  pull(year)
+  
+```
+
+Q: In what year(s) was Lucas the most popular boys name?
+
+```{r}
+baby_names |>
+  filter(name == "John") |>
+  filter(rank == 1) |>
+  pull(year)
+```
