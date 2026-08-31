@@ -1,0 +1,227 @@
+---
+title: "Untitled"
+format: pdf
+editor: visual
+---
+
+# Code for Class Slides
+
+```{r, include=FALSE}
+library(tidyverse)
+library(pokemon)
+library(broom)
+
+set.seed(1)
+pokemon_sample <- pokemon |> slice_sample(prop=0.5)
+write_csv(pokemon_sample, "pokemon_sample.csv")
+```
+
+### Example 1a: Deterministic function
+
+Suppose we have a function of $x$: $f(x) = 3x + 5$. Then, even if we only have a few data points, we can find a new data point, as shown below for $f(1) = 8$.
+
+```{r}
+example_df <- tibble(x=c(0, 2, 5, 6),                      
+                     f_x=c(5, 11, 20, 23))  
+example_df |>   
+  ggplot()+   
+  geom_point(aes(x=x, y=f_x))+   
+  geom_line(aes(x=x, y=f_x))+   
+  geom_vline(xintercept=1, color="red", linetype="dashed")+   
+  geom_hline(yintercept=8, color="purple", linetype="dashed")+   
+  annotate("text", x=0.5, y=9, label= "f(1)=8", color="purple")+   
+  labs(x="x", y="f(x)")+   
+  theme_bw() 
+```
+
+### Example 1b: Adding Random Error
+
+A slightly different version of the problem is if we have \$f(x) = 3x + 5 + \epsilon\$, where $\epsilon$ is a random error term. In this case, we use `rnorm()` to sample random normally-distributed random values when creating these data. Now, we cannot deterministically calculate $f(1)$, though the guess of $f(1) = 8$ does not seem unreasonable.
+
+```{r}
+set.seed(260) 
+random_df <- tibble(x=c(0, 2, 5, 6),                     
+                    f_x=c(5, 11, 20, 23)+rnorm(4),                     
+                    f_x_true=c(5, 11, 20, 23))  
+random_df |>   
+  ggplot()+   
+  geom_point(aes(x=x, y=f_x))+   
+  geom_line(aes(x=x, y=f_x))+   
+  geom_abline(slope=3, intercept=5, linetype="dashed")+   
+  geom_vline(xintercept=1, color="red", linetype="dashed")+   
+  geom_hline(yintercept=8, color="purple", linetype="dashed")+   
+  annotate("text", x=0.5, y=9, label= "f(1)=8?", color="purple")+   
+  labs(x="x", y="f(x)")+   
+  theme_bw() 
+```
+
+### Example 1c: Multiple Data Points at same $x$ value
+
+A further case is what if we don't just have 1 $f(x)$ for any $x$, but we have data pairs $(x_i, y_i)$ where $i$ is an index from $1$ to $n$. Here, there could be multiple observation at a particular fixed $x$. We now don't think of any function $f$ as a fixed function that dictates $f(x)$, but instead as a **model** for explaining the relationship between $x$ and $y$. Here, we generate $(x, y)$ pairs from a true model of $f(x) = 3x + 5$, where we add random normally-distributed error to both $x$ and $y$.
+
+```{r}
+set.seed(260)
+random_df_10pts <- tibble(x = rep(c(0,2,5,6), 10)+rnorm(40, sd=0.5),
+                          y = rep(c(5, 11, 20, 23), 10)+rnorm(40),
+                          f_x_true=rep(c(5, 11, 20, 23), 10))
+
+random_df_10pts |>   
+  ggplot()+   
+  geom_point(aes(x=x, y=y))+   
+  labs(x="x", y="y")+   
+  theme_bw() 
+```
+
+Let's once again plot the true model between the $x$ and $y$ variables in the scatterplot:
+
+```{r}
+random_df_10pts |>   
+  ggplot()+   
+  geom_point(aes(x=x, y=y))+  
+  geom_abline(slope=3, intercept=5, linetype="dashed")+   
+  geom_vline(xintercept=1, color="red", linetype="dashed")+   
+  geom_hline(yintercept=8, color="purple", linetype="dashed")+   
+  annotate("text", x=0.5, y=9, label= "f(1)=8?", color="purple")+   
+  labs(x="x", y="y")+   
+  theme_bw() 
+```
+
+What does the error look like? We can visualize the error terms using `geom_segment()`:
+
+```{r}
+random_df_10pts |>   
+  ggplot()+   
+  geom_point(aes(x=x, y=y))+ 
+  geom_abline(slope=3, intercept=5, linetype="dashed")+  
+  geom_segment(aes(x = x, y = y, xend = x, yend = 3*x + 5), color = "red") +  # Vertical lines
+  labs(x="x", y="y")+   
+  theme_bw() 
+```
+
+```{r, eval=FALSE, echo=FALSE}
+set.seed(1)
+pop_n <- 200
+dat1 <- tibble(x = runif(n=pop_n, min=5, max=20), 
+               y = 2*x + 3 + rnorm(n=pop_n, mean=0, sd = 2)) 
+
+dat1 |>
+  ggplot(aes(x=x, y=y)) +
+  geom_point(alpha=1) +
+  geom_smooth(method="lm", se=FALSE, lty="dashed", lwd=1, color="red") +
+  annotate("text", x = Inf, y = 30, 
+           label = expression(y == beta[0] + beta[1]*x + epsilon), 
+           size = 5, hjust = 1, vjust=1, color="red") +
+  labs(title = paste("Population of size 200"))
+
+dat1 |> 
+  slice_sample(n=30) |>
+  ggplot(aes(x=x, y=y)) +
+  geom_point() +
+  labs(title = paste("Sample of size n=30"))
+```
+
+### Example 2: Many different kinds of relationships!
+
+Models don't exclusively have to be *linear* in form. We will likely want to specify a non-linear model for some of the data plotted below:
+
+```{r}
+set.seed(260)
+random_df_2 <- tibble(x = runif(1000, -10, 10),
+                      y1 = 5+3*x+rnorm(1000),
+                      y2 = 5+3*x^2+rnorm(1000, sd=5),
+                      y3 = abs(5+3*x)+rnorm(1000),
+                      y4 = ifelse(5+3*x+rnorm(1000, sd=5)>12, 1, 0))
+
+random_df_2 |>   
+  ggplot()+   
+  geom_point(aes(x=x, y=y1), alpha=0.5)+   
+  labs(x="x", y="y")+
+  theme_bw() 
+```
+
+```{r}
+random_df_2 |>   
+  ggplot()+   
+  geom_point(aes(x=x, y=y2), alpha=0.5)+   
+  labs(x="x", y="y")+   
+  theme_bw() 
+```
+
+```{r}
+random_df_2 |>   
+  ggplot()+   
+  geom_point(aes(x=x, y=y3), alpha=0.5)+   
+  labs(x="x", y="y")+   
+  theme_bw() 
+```
+
+```{r}
+random_df_2 |>   
+  ggplot()+   
+  geom_point(aes(x=x, y=y4), alpha=0.5)+   
+  labs(x="x", y="y")+   
+  theme_bw()
+```
+
+## Shoeprints and Heights
+
+```{r}
+heights <- read_csv("heights.csv")
+glimpse(heights)
+
+# Scatterplot (no line)
+heights |> ggplot(aes(x=shoePrint, y = height)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  xlab("Length of shoeprint (in cm)") +
+  ylab("Height (in cm)") +
+  theme_minimal()
+
+# Adding the lines
+model_heights <- lm(height ~ shoePrint, data=heights)
+heights |> 
+  mutate(fitted_values = fitted(model_heights)) |>
+  ggplot(aes(x=shoePrint, y = height)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  # Add vertical lines from points to regression line
+  geom_segment(aes(xend = shoePrint, yend = fitted_values), 
+               color = "red", alpha = 0.7) +
+  labs(x = "Length of shoeprint (in cm)", 
+       y = "Height (in cm)")
+```
+
+## Pokemon
+
+```{r}
+pokemon_sample <- read_csv("pokemon_sample.csv")
+
+psychic_pokemon <- pokemon_sample |> 
+  filter((type_1 == "psychic") | (type_2 == "psychic"))
+
+psychic_pokemon |>
+  ggplot(aes(x = speed, y = special_attack)) +
+  geom_point() + 
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    title = "Psychic Pokemon: Special-Attack vs Speed",
+    x = "Speed Points",
+    y = "Special-Attack Points")
+
+# Fitting a linear model
+model_1 <- lm(special_attack ~ speed, data = psychic_pokemon)
+model_1 |> tidy()
+beta1_hat <- model_1 |> 
+   tidy() |>
+   filter(term=="speed") |> 
+   select(estimate) |>
+   pull()
+beta1_hat
+
+
+# Fitting another linear model: hit points ~ base experience points
+model_2 <- lm(hp ~ base_experience, data=pokemon_sample)
+model_2 |> tidy()
+
+
+```
