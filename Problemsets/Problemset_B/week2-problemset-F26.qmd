@@ -1,5 +1,5 @@
 ---
-title: "STA130 - Week 2 Problem Set (Fall 2026) Sample Solutions"
+title: "STA130 - Problem Set B (Fall 2026)"
 author: "YOUR NAME"
 format: pdf
 ---
