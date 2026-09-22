@@ -78,7 +78,7 @@ Q1a_number_of_observations <- NULL
 
 *\<Type your answer to the written question here (note that R code does not run outside of the grey R code chunks).\>*
 
-## (b) Create three histograms to explore the distribution of the roller coaster lengths (in feet): (i) one with 5 bins, (ii) one with 30 bins, and (iii) one with 80 bins; make sure to specify meaningful axis labels where appropriate. Which of these histograms is most appropriate to describe the distribution of roller coaster speeds? Why? Write a few sentences describing the distribution based on the histogram you chose as most appropriate.
+## (b) Create three histograms to explore the distribution of the roller coaster lengths (in feet): (i) one with 5 bins, (ii) one with 30 bins, and (iii) one with 80 bins; make sure to specify meaningful axis labels where appropriate. Which of these histograms is most appropriate to describe the distribution of roller coaster lengths? Why? Write a few sentences describing the distribution based on the histogram you chose as most appropriate.
 
 ```{r}
 # Explain how you can save plots as objects and then print them to display
