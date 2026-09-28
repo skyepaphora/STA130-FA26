@@ -1,0 +1,234 @@
+---
+title: "STA130 - Lecture C Problem Set"
+author: "YOUR NAME (Instructors: Emily Somerset and Skye Griffith)"
+format: pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(cowplot)
+library(openintro)
+library(VGAMdata)
+library(gapminder)
+```
+
+# Problem Set Objectives
+
+The weekly problem sets are designed to do the following:
+
+-   Provide structured practice with immediate feedback, allowing students to identify and correct misconceptions early
+-   Build practical data analysis skills through hands-on experience with R, reinforcing statistical concepts through active application
+-   Develop reproducible workflow habits, namely through the use of Quarto to combine code, output, and text.
+
+# Instructions
+
+## How do I check my work
+
+You will access the Problem Set and do your work on JupyterHub (link on Quercus)
+
+When you click `Render` to create a pdf of your solutions, you may get a popup that says "Popup Blocked - We attempted to open an external browser window...". If you get this message, click `Cancel` and then you will be able to open your .pdf file by selecting it in the bottom right window (in the same folder as your .qmd file).
+
+Once you are done with a question and want to check if it is correct, you will need to download your .qmd and .pdf files and upload them to MarkUs to run the tests.
+
+Usually when you do an assignment, you don't find out whether your answers are correct until *after* the deadline, when you get your grade back. However, using MarkUs, you can submit your work before the deadline and run tests to check your solutions!
+
+*Note:* Some parts of some questions may not be covered by tests in MarkUs, but you're still responsible for reviewing the posted solutions and make sure you understand them.
+
+**To download your files from JupyterHub, go to the bottom right window and do the following:**
+
+-   Select the files you want to download (likely .qmd and .pdf)
+-   Click on More $\Rightarrow$ Export
+
+**To upload your work to MarkUs to run the tests:**
+
+-   Go to MarkUs: <https://markus.teach.cs.toronto.edu/markus/courses>
+-   Open the current assignment and upload your file(s) (note that by default, the files you download from JupyterHub will likely be in your `Downloads` folder)
+-   Run the tests
+
+## What to do if a test fails on MarkUs
+
+-   Take a deep breath! Your work won't really be graded until the deadline, so start early to make sure you have lots of time to resolve issues before the deadline.
+-   Read the message to get hints about what the problem is. For example "variable X not present" means that you may have a typo in your variable name.
+-   Search on Piazza to see if other classmates have encountered a similar error (and if not, consider posting a screenshot of the error message)
+-   Come to TA or instructor office hours with your issue
+
+## How do I submit my Problem Set?
+
+You will submit your solutions (.qmd and .pdf) on MarkUs at the link above. You can submit as many times as you like but only your latest submission will be counted.
+
+\newpage
+
+## Question 1
+
+The code below loads the `VGAMdata` package (so you can access the datasets it contains) and the `tidyverse` package (so you can use the functions it contains) and glimpses the `oly12` dataset, which you will use for this question
+
+```{r}
+library(tidyverse)
+library(VGAMdata)
+glimpse(oly12)
+```
+
+### (a) What does each row in the `oly12` dataset represent? Hint: Type `?oly12` in the console (bottom left) to view the help file for the `oly12` dataset (it will appear in the Help tab in the bottom right corner of RStudio)
+
+
+
+### (b) Use the `oly12` dataset to determine the number of athletes who represented Canada in the 2012 Olympic Games. Note: there is more than one way to do this, but you need to use the `oly12` dataset for this question. Save your final numerical answer in the R object `Q1b_num_canadian_athletes`
+
+```{r}
+# Type your code here
+
+# Using filter to keep only canadian athletes, 
+# then glimpse to view the number of observations
+
+
+# Using filter to keep only canadian athletes, 
+# then count the number of rows in the resulting data frame
+
+
+# Use summarise to calculate the number of athletes for each country, 
+# then filter to keep only the row for Canada
+
+
+
+Q1b_num_canadian_athletes <- NULL
+Q1b_num_canadian_athletes
+```
+
+### (c) Create a new dataframe called `oly12_selectedSports` which contains only data for athletes who competed in either Weightlifting or Badminton (look at values of the `Sport` variable).
+
+```{r}
+oly12_selectedSports <- NULL
+```
+
+### (d) Compare the age distribution for olympic athletes competing in weightlifting to the age distribution of olympic athletes competing in badminton using both boxplots and histograms. Please put `Age` on the `x` axis for both the boxplots and histograms, and replace NULL with your code for each plot type below. Use `facet_wrap` to view a separate histogram for each sport (weightlifting vs badminton).
+
+```{r}
+Q1d_boxplot <- NULL
+Q1d_histogram <- NULL
+
+
+Q1d_boxplot
+Q1d_histogram
+```
+
+### (e) Based on the plots you created in (d), answer the following questions:
+
+#### (i) Are the age distributions of badminton players and weightlifters symmetrical or skewed?
+
+
+
+#### (ii) Is the median age higher for badminton players or weightlifters?
+
+
+#### (iii) Based only on the histogram and boxplots, predict whether the standard deviation of the ages is similar or different. Justify your answer in 2-3 sentences.
+
+### (f) Create a summary table reporting the minimum, maximum, mean, median, and standard deviation of ages for badminton players and weightlifters. Compare these values to the prediction you made in (e-iii). Save your summary table in the `Q1f_summary_table` R object below. The column names in your summary table should be: `Sport`, `min`, `max`, `mean`, `median`, and `sd`, and should appear in this order.
+
+```{r}
+Q1f_summary_table <- NULL
+
+Q1f_summary_table
+```
+
+### (g) Use the `arrange` function to find the name and age of the youngest athlete who competed in the 2012 Olympics. Replace NULL by your answer, typing your answer as a string surrounded by quotation marks.
+
+```{r}
+
+Q1g_youngest_athlete <- NULL # Replace NULL by your answer
+# Make sure your answer is in quotation marks and is identical to the name that 
+# appears in the oly12 data
+```
+
+### (h) Which country has the highest proportion of athletes who are 40 or older, among countries with at least 100 athletes at the games? Replace NULL by your answer, typing your answer as a string surrounded by quotation marks.
+
+```{r}
+
+Q1h_country_with_highest_prop_older_athletes <- NULL
+```
+
+\newpage
+
+## Question 2 (`gapminder` data)
+
+The first part of this problem set works with the `gapminder` dataset from the `gapminder` package, containing information about 142 countries from 1952 to 2007. This dataset tracks life expectancy, population, and economic development across continents and time.
+
+The dataset includes:
+
+-   `country`: Country name (142 countries)
+
+-   `continent`: Continent (Africa, Americas, Asia, Europe, Oceania)
+
+-   `year`: Year of observation (every 5 years from 1952-2007)
+
+-   `lifeExp`: Life expectancy at birth in years
+
+-   `pop`: Population
+
+-   `gdpPercap`: GDP per capita in US dollars (inflation-adjusted)
+
+You can also use `glimpse()` to get a view of the data, and `?gapminder` to get more information about the dataset and how it was collected.
+
+```{r}
+library(tidyverse)
+library(gapminder)
+data(gapminder)
+glimpse(gapminder)
+```
+
+### (a) The `gapminder` data includes data for several different years, from 1952 to 2007. Create a new tibble called `gapminder_2007` that contains only observations from 2007.
+
+```{r}
+gapminder_2007 <- NULL
+```
+
+### (b) Using the `gapminder_2007` tibble you created above, use the `group_by()` and `summarise()` functions, create a summary showing how many countries are represented from each continent. Save this summary table in the R object `Q2b_continent_summary`, with the following columns: `continent` and `n_countries`. Based on this summary table, answer the following questions:
+
+-   How many continents are represented in these data in 2007? Save your answer in `Q2b_num_continents`
+-   Which continent is represented by the most countries in 2007? Save your answer in `Q2b_most_countries`
+
+```{r}
+Q2b_continent_summary <- NULL
+Q2b_num_continents <- NULL
+Q2b_most_countries <- NULL
+
+Q2b_continent_summary
+Q2b_num_continents
+Q2b_most_countries
+
+```
+
+### (c) In this part, you'll copy your code from the part above and add an additional column to your summary table, calculating the average life expectancy for each continent in 2007 - the columns of your summary table should be "continent", "n_countries", and "avg_life_expectancy". Save the updated summary table in the R object `Q2c_continent_summary`. Which continent has the highest average life expectancy in 2007 (save your answer in `Q2c_continent_highest_avgLifeExp`)?
+
+```{r}
+Q2c_continent_summary <- NULL
+Q2c_continent_highest_avgLifeExp <- NULL
+
+
+Q2c_continent_summary
+Q2c_continent_highest_avgLifeExp
+```
+
+### (d) Using your gapminder_2007 tibble and the mutate() and case_when() functions, create a new variable called `wealth_category` that classifies countries based on their GDP per capita as:
+
+-   "Low income": GDP per capita less than \$2,000
+-   "Lower middle income": $2,000 <=$ GDP per capita \$ \< 5,999\$
+-   "Upper middle income": $6,000 <=$ GDP per capita \$ \< 15,999
+-   "High income": GDP per capita \$16,000 or more
+
+Save your new tibble in the `Q2d_gapminder_2007` R object.
+
+```{r}
+Q2d_gapminder_2007 <- NULL
+```
+
+### (e) Using your `Q2d_gapminder_2007` tibble from above, determine how many countries from the Americas continent are in each of the wealth categories, and replace NULL by your numerical answers in the code chunk below:
+
+```{r}
+Q2e_americas_num_countries_low <- NULL
+Q2e_americas_num_countries_lower_middle <- NULL
+Q2e_americas_num_countries_upper_middle <- NULL
+Q2e_americas_num_countries_high <- NULL
+
+
+```
