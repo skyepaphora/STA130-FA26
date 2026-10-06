@@ -1,0 +1,393 @@
+---
+title: "STA130 - Week 4 Problem Set (Fall 2026)"
+author: "YOUR NAME"
+format: pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(broom)
+# library(cowplot)
+#library(openintro)
+#library(VGAMdata)
+#library(gapminder)
+```
+
+# Problem Set Objectives
+
+The weekly problem sets are designed to do the following:
+
+-   Provide structured practice with immediate feedback, allowing students to identify and correct misconceptions early
+-   Build practical data analysis skills through hands-on experience with R, reinforcing statistical concepts through active application
+-   Develop reproducible workflow habits, namely through the use of Quarto to combine code, output, and text.
+
+# Instructions
+
+## How do I check my work
+
+You will access the Problem Set and do your work on JupyterHub (link on Quercus)
+
+When you click `Render` to create a pdf of your solutions, you may get a popup that says "Popup Blocked - We attempted to open an external browser window...". If you get this message, click `Cancel` and then you will be able to open your .pdf file by selecting it in the bottom right window (in the same folder as your .qmd file).
+
+Once you are done with a question and want to check if it is correct, you will need to download your .qmd and .pdf files and upload them to MarkUs to run the tests.
+
+Usually when you do an assignment, you don't find out whether your answers are correct until *after* the deadline, when you get your grade back. However, using MarkUs, you can submit your work before the deadline and run tests to check your solutions!
+
+*Note:* Some parts of some questions may not be covered by tests in MarkUs, but you're still responsible for reviewing the posted solutions and make sure you understand them.
+
+**To download your files from JupyterHub, go to the bottom right window and do the following:**
+
+-   Select the files you want to download (likely .qmd and .pdf)
+-   Click on More $\Rightarrow$ Export
+
+**To upload your work to MarkUs to run the tests:**
+
+-   Go to MarkUs: <https://markus.teach.cs.toronto.edu/markus/courses>
+-   Open the current assignment and upload your file(s) (note that by default, the files you download from JupyterHub will likely be in your `Downloads` folder)
+-   Run the tests
+
+## What to do if a test fails on MarkUs
+
+-   Take a deep breath! Your work won't really be graded until the deadline, so start early to make sure you have lots of time to resolve issues before the deadline.
+-   Read the message to get hints about what the problem is. For example "variable X not present" means that you may have a typo in your variable name.
+-   Search on Piazza to see if other classmates have encountered a similar error (and if not, consider posting a screenshot of the error message)
+-   Come to TA or instructor office hours with your issue
+
+## How do I submit my Problem Set?
+
+You will submit your solutions (.qmd and .pdf) on MarkUs at the link above. You can submit as many times as you like but only your latest submission will be counted.
+
+\newpage
+
+## Question 1
+
+```{r}
+library(tidyverse)
+```
+
+The `walmart_sales_weekly` dataset contains data on weekly sales for a retail company (Walmart), including information on holidays, markdowns, and economic indicators.
+
+```{r}
+walmart_sales_weekly <- read_csv("walmart_sales_weekly.csv")
+
+# Changing dept and store to factor variables because they are categorical. 
+walmart_sales_weekly <- walmart_sales_weekly |> 
+  mutate(Dept = factor(Dept), 
+         Store = factor(Store)) |> 
+  dplyr::select(- (MarkDown1:MarkDown5))
+
+glimpse(walmart_sales_weekly)
+```
+
+### (a) Create a scatterplot showing the relationship between **Temperature** (x-axis) and **Weekly_Sales** (y-axis) for Walmart, with points coloured by department (**Dept**). Save your plot as the R object `Q1a_plot`. Describe the association(s) you observe between **Temperature** and **Weekly_Sales**. Comment on any differences in these associations across departments. Describe one reason why you might observe these differences.
+
+```{r}
+Q1a_plot <- NULL
+
+Q1a_plot
+```
+
+### (b) Filter the data to include only observations from **Department 95**, and save the filtered dataset as `sales_dept_95`. Using `sales_dept_95`, create a scatterplot showing the relationship between **Temperature** (x-axis) and **Weekly_Sales** (y-axis). Save your plot as the R object `Q1b_plot`. Based on the scatterplot, visually estimate the slope of the relationship. Think about the following question: If Week B is **10°F hotter** than Week A, approximately how much higher or lower would you expect **Weekly_Sales** to be in Week B compared with Week A? Explain how you arrived at your estimate using the plot.
+
+```{r}
+sales_dept_95 <- NULL
+
+Q1b_plot <- NULL
+
+Q1b_plot
+```
+
+### (c) Suppose we were to fit a simple linear regression model to the Department 95 data, with **Weekly_Sales** as the outcome variable and **Temperature** as the predictor variable. Which of the following represents the population model we are assuming? Save your answer in the R object `Q1c_answer` below. Carefully define each term in the model you selected.
+
+A. $\text{Temperature}_i = \beta_0 + \beta_1 \cdot \text{Weekly\_Sales}_i + \epsilon_i$; $\epsilon_i \sim \text{Normal}(0, \sigma^2)$
+
+B. $\text{Weekly\_Sales}_i = \beta_0 + \beta_1 \cdot \text{Temperature}_i + \epsilon_i$; $\epsilon_i \sim \text{Normal}(0, \sigma^2)$
+
+C. $\text{Weekly\_Sales}_i = \beta_0 + \beta_1 \cdot \text{Temperature}_i$
+
+D. $\widehat{\text{Weekly\_Sales}}_i = \beta_0 + \beta_1 \cdot \text{Temperature}_i + \epsilon_i$; $\epsilon_i \sim \text{Normal}(0, \sigma^2)$
+
+```{r}
+Q1c_answer <- NULL
+```
+
+### (d) Now fit a simple linear regression model using `sales_dept_95` to predict **Weekly_Sales** based on **Temperature**. Save your fitted model in the R object `Q1d_model`.
+
+```{r}
+Q1d_model <- NULL
+
+```
+
+### (e) Use the `tidy()` function from the `broom()` library to see the estimates from your fitted model. Save this tibble in the R object `Q1e_model_summary`.
+
+```{r}
+Q1e_model_summary <- NULL
+
+Q1e_model_summary
+```
+
+### (f) Interpret each estimate in the fitted model you obtained above. What does each estimate mean, in practical terms?
+
+### (g) Add the fitted regression line from your model in part (d) to the scatterplot you created in part (b) using the function `geom_smooth`. Set `se=FALSE` in the function (you will learn about this later). Save the resulting plot as the R object `Q1g_plot`.
+
+```{r}
+Q1g_plot <- NULL
+
+Q1g_plot
+```
+
+\newpage
+
+## Question 2
+
+In Question 1, you explored the relationship between Temperature and Weekly_Sales for Department 95. We will now simulate a new variable called `Competitor_Discount` for teaching purposes. This competitor discount variable is the average discount (%) offered by nearby competing retailers that week.
+
+```{r}
+set.seed(130)
+
+# UNCOMMENT THE CODE BELOW
+# sales_dept_95 <- sales_dept_95 |>
+#   mutate(
+#     Competitor_Discount = 
+#       scales::rescale(
+#         -Weekly_Sales + rnorm(n(), 0, 5000),
+#         to = c(0, 30)
+#       )
+#   )
+```
+
+### (a) Using `sales_dept_95`, create a scatterplot showing the relationship between Competitor_Discount (x-axis) and Weekly_Sales (y-axis). Save your plot as the R object `Q2a_plot`. Describe the association you observe.
+
+```{r}
+Q2a_plot <- NULL
+
+Q2a_plot
+```
+
+### (b) Fit a simple linear regression model using `sales_dept_95` to predict **Weekly_Sales** based on **Competitor_Discount**. Save your fitted model in the R object `Q2b_model`.
+
+```{r}
+Q2b_model <- NULL
+```
+
+### (c) Use the `tidy()` function from the `broom` library to obtain the coefficient estimates from your fitted model. Save the resulting tibble in the R object `Q2c_model_summary`.
+
+```{r}
+Q2c_model_summary <- NULL
+
+Q2c_model_summary 
+```
+
+### (d) Interpret the **slope estimate** from your fitted model. What does this value mean in practical terms about the relationship between competitor discounts and weekly sales for Walmart Department 95?
+
+### (e) Add the fitted regression line from your model in part (b) to the scatterplot you created in part (a) using the function `geom_smooth`. Set `se=FALSE` in the function (you will learn about this later). Save the resulting plot as the R object `Q2e_plot`.
+
+```{r}
+Q2e_plot <- NULL
+
+Q2e_plot
+```
+
+### (f) You have now fitted two simple linear regression models to predict **Weekly_Sales** for Walmart Department 95. Based on the scatterplots and fitted models, which variable do you think is better for predicting **Weekly_Sales**: **Temperature** or **Competitor_Discount**?
+
+### \newpage
+
+## Question 3
+
+In Lecture D, we considered two models for the speed of a roller coaster.
+First, we modeled roller coaster speed using only one quantitative variable. We then considered whether the height of a roller coaster could help us understand and predict its speed.
+
+Let's first upload the roller coaster data:
+```{r}
+RollerCoaster <- read_csv("RollerCoasters.csv")
+```
+
+We suggest that you open your Lecture D slides. In this question, you will recreate some aspects of the roller coaster analysis from lecture.
+
+### (a) In the section "Introduction to modeling: One Quantitative Variable",we assumed that roller coaster speeds in the population followed a Normal distribution. Which TWO of the following are equivalent ways of writing this statistical model? Save the letters corresponding to your TWO answers in `Q3a_answer`.
+
+A. $\text{Speed}_i = \beta_0 + \epsilon_i$,
+   where $\epsilon_i \sim \text{Normal}(0,\sigma^2)$
+B. $\text{Speed}_i = \beta_0$
+C. $\text{Speed}_i = \beta_0 + \beta_1\text{Height}_i + \epsilon_i$,
+   where $\epsilon_i \sim \text{Normal}(0,\sigma^2)$
+D. $\text{Speed}_i \sim \text{Normal}(\beta_0,\sigma^2)$
+E. $\text{Speed}_i = 58.6$
+
+
+```{r}
+Q3a_answer <- NULL
+```
+
+
+### (b) For the one-variable model, the sample mean speed was 58.6 mph and the sample standard deviation was 14.0 mph. Which of the following best describes the fitted model? Save the letter corresponding to your answer in `Q3b_answer`.
+
+A. Every roller coaster is predicted to travel exactly 58.6 mph.
+B. Roller coaster speeds are centered around 58.6 mph, with speeds farther from 58.6 mph becoming less common.
+C. 58.6 mph is the fastest speed we would expect to observe.
+D. Roller coaster speeds range from 44.6 mph to 72.6 mph.
+E. All roller coaster speeds are exactly 14 mph away from 58.6 mph.
+
+```{r}
+Q3b_answer <- NULL
+```
+
+### (c) We then included roller coaster height as an explanatory variable. Which statement best describes the main difference between the one-variable model and the two-variable model? Save the letter corresponding to your answer in `Q3c_answer`.
+
+
+A. The one-variable model assumes roller coaster speeds vary around one population mean, while the two-variable model assumes all roller coasters fall exactly on the regression line.
+
+B. The one-variable model assumes roller coaster speeds follow a Normal distribution, while the two-variable model no longer uses Normal distributions to model roller coaster speeds.
+
+C. In the one-variable model, every roller coaster has the same speed, while in the two-variable model every roller coaster has a different speed determined by its height.
+
+D. In the one-variable model, there is one population mean speed for all roller coasters. In the two-variable model, the population mean speed can change depending on the height of the roller coaster.
+
+E. In the one-variable model, you cannot use the model to predict the speed of a randomly selected roller coaster.
+
+```{r}
+Q3c_answer <- NULL
+```
+
+### d) 
+For the two-variable model, we used
+$$
+\text{Speed}_i =
+\beta_0 + \beta_1\text{Height}_i + \epsilon_i.
+$$
+Suppose a roller coaster is faster than the typical speed for a roller coaster of its height.Which statement about its random deviation, $\epsilon_i$, is correct? Save the letter corresponding to your answer in `Q3d_answer`.
+A. $\epsilon_i > 0$
+B. $\epsilon_i < 0$
+C. $\epsilon_i = 0$
+D. We cannot determine whether $\epsilon_i$ is positive or negative.
+
+```{r}
+Q3d_answer <- NULL
+```
+
+### e) For the following regression model, we will filter out heights greater than 300. Fit a simple linear regression model using `RollerCoaster` to predict **Speed** based on **Height**. Save your fitted model in the R object `Q3e_model`. Which of the following is the best interpretation of this model? Save the letter corresponding to your answer in `Q3e_model_interp`.
+
+A. A roller coaster that is 1 foot taller will have a speed that is approximately 0.20 mph faster.
+
+B. For every 1 mph increase in roller coaster speed, the mean height of roller coasters is estimated to increase by approximately 0.20 feet.
+
+C. For every 1 foot increase in roller coaster height, the mean roller coaster speed is estimated to increase by approximately 0.20 mph.
+
+D. The mean speed of a roller coaster that is 0 feet tall is approximately 0.20 mph.
+
+E. Roller coaster height explains approximately 20% of the differences in roller coaster speeds.
+
+```{r}
+RollerCoaster <- RollerCoaster |> 
+  filter(Height<=300)
+
+Q3e_model <- NULL
+
+Q3e_model
+
+Q3e_model_interp <- NULL
+```
+
+### f) Plot the association between `Speed` and `Height` and use `geom_smooth(se=FALSE, method="lm")` to add a line of best fit tp this plot. Save your plot to `Q3f_plot`. Which of the following is the best interpretation of the blue line on this plot? Save the letter corresponding to your answer in `Q3f_model_interp`.
+
+A. The blue line shows the speed that every roller coaster is estimated to have based on its height.
+
+B. The blue line shows the estimated population mean speed of roller coasters at each height.
+
+C. The blue line shows that all taller roller coasters are faster than shorter roller coasters.
+
+D. The blue line shows the distribution of roller coaster heights in the population.
+
+```{r}
+
+Q3f_plot <- NULL
+Q3f_plot <- RollerCoaster |> 
+  ggplot(aes(x = Height, y=Speed)) +
+  geom_point() +
+  geom_smooth(method = "lm", se=FALSE)+
+  xlab("Height (feet)") +
+  ylab("Speed (mph)")+
+  theme_bw()
+
+Q3f_plot
+
+Q3f_model_interp <- NULL
+```
+
+### g) Using the fitted model `Q3e_model`, predict the speed of a roller coaster that is **150 feet tall**. Which of the following is statements related to your prediction is correct? Save the letter corresponding to your answer in `Q3e_pred`.
+
+A. The predicted speed is approximately 62.7 mph, and it corresponds to the height of the blue regression line at 150 feet.
+
+B. The predicted speed is approximately 62.7 mph, and every roller coaster that is 150 feet tall is expected to travel at exactly this speed.
+
+C. The predicted speed is approximately 32.6 mph, because this is the intercept of the fitted regression model.
+
+D. The predicted speed is approximately 62.7 mph, and it corresponds to the vertical distance between the blue regression line and a roller coaster that is 150 feet tall.
+
+E. The predicted speed cannot be calculated because there may not be a roller coaster in the sample that is exactly 150 feet tall.
+
+
+```{r}
+Q3g_pred <- NULL
+```
+
+\newpage
+
+## Question 4
+
+In a 1965 article, George Moore predicted the number of transistors on processors would double every year. He projected that level of growth would continue for at least another decade. A decade later, in 1975, he revised the forecast to doubling every two years. This is now commonly known as Moore's law.
+
+The `processors.csv` dataset contains a sample of data on processors, scraped from [Wikipedia](https://en.wikipedia.org/wiki/mos_transistor_count) about the number of transistors in central processing units (CPUs) and general processing units (GPUs). It also shows the name of the processor and the year it was introduced.
+
+```{r}
+processors <- read_csv("processors.csv")
+glimpse(processors)
+```
+
+### (a) Create an appropriate plot for the number of transistors (y axis) per year (x axis), faceted by `unit_type`. In other words, create two scatterplots, one for each value of the `unit_type` variable. Save your combined plot in the R object `Q4a_plots` below.
+
+```{r}
+Q4a_plots <- NULL
+
+Q4a_plots
+```
+
+### (b) Do you believe it is appropriate to fit a straight line through this plot as it is displayed? Replace NULL by your answer ("Yes" or "No") and write a sentence explaining your answer.
+
+```{r}
+Q4b_is_straight_line_model_appropriate <- NULL
+Q4b_is_straight_line_model_appropriate
+```
+
+### (c) Here you will modify the `processors` data by adding a new variable called `log_transistors` to the dataset. You can use `mutate()` and the `log()` function (use the default, which is the natural logarithm, with base $e$), and save your updated tibble in the `Q4c_processors` R object below. Do not group or sort the data, nor do anything else to the processors tibble, other than creating a new variable.
+
+```{r}
+# Replace NA by the correct expression in the code below
+Q4c_processors <- NULL
+
+
+Q4c_processors
+```
+
+### (d) Using the `Q4c_processors` tibble, plot the association between `log_transistors` and `year`, faceted by `unit_type` and use `geom_smooth(se=FALSE, method="lm")` to add a line of best fit to both plots; save this combined plot in the R object `Q4d_plot`. Describe this association in each plot.
+
+Note: You will learn more about transforming variables in future courses and are not required to be able to explain why we've done this here. You can just treat `log_transistors` as we have other variables in class and refer to it as "the log number of transistors".
+
+```{r}
+Q4d_plot <- NULL
+
+Q4d_plot
+```
+
+### (e) Fit the following linear model and save it (that is, save the output of `lm()`) in an R object called `Q4e_model`. The model you will fit will predict the log number of transistors based on year, focusing only on CPUs (not GPUs). Use the `tidy()` and `pull()` functions to extract the estimated coefficient for the `year` predictor, and save this estimate in the R object called `Q4e_estimated_coefficient_year`.
+
+```{r}
+Q4e_model <- NULL
+Q4e_estimated_coefficient_year <- NULL
+
+Q4e_estimated_coefficient_year
+
+```
+
+### (f) Briefly explain why or why not the interpretation of the intercept is helpful for understanding Moore's Law.
