@@ -1,0 +1,306 @@
+---
+title: "STA130 - Lecture E Problem Set"
+author: "YOUR NAME (Instructors: Emily Somerset and Skye Griffith)"
+format: pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(broom)
+library(moderndive) # need this for geom_parallel_slopes()
+```
+
+# Problem Set Objectives
+
+The weekly problem sets are designed to do the following:
+
+-   Provide structured practice with immediate feedback, allowing students to identify and correct misconceptions early
+-   Build practical data analysis skills through hands-on experience with R, reinforcing statistical concepts through active application
+-   Develop reproducible workflow habits, namely through the use of Quarto to combine code, output, and text.
+
+# Instructions
+
+## How do I check my work
+
+You will access the Problem Set and do your work on JupyterHub (link on Quercus)
+
+When you click `Render` to create a pdf of your solutions, you may get a popup that says "Popup Blocked - We attempted to open an external browser window...". If you get this message, click `Cancel` and then you will be able to open your .pdf file by selecting it in the bottom right window (in the same folder as your .qmd file).
+
+Once you are done with a question and want to check if it is correct, you will need to download your .qmd and .pdf files and upload them to MarkUs to run the tests.
+
+Usually when you do an assignment, you don't find out whether your answers are correct until *after* the deadline, when you get your grade back. However, using MarkUs, you can submit your work before the deadline and run tests to check your solutions!
+
+*Note:* Some parts of some questions may not be covered by tests in MarkUs, but you're still responsible for reviewing the posted solutions and make sure you understand them.
+
+**To download your files from JupyterHub, go to the bottom right window and do the following:**
+
+-   Select the files you want to download (likely .qmd and .pdf)
+-   Click on More $\Rightarrow$ Export
+
+**To upload your work to MarkUs to run the tests:**
+
+-   Go to MarkUs: <https://markus.teach.cs.toronto.edu/markus/courses>
+-   Open the current assignment and upload your file(s) (note that by default, the files you download from JupyterHub will likely be in your `Downloads` folder)
+-   Run the tests
+
+## What to do if a test fails on MarkUs
+
+-   Take a deep breath! Your work won't really be graded until the deadline, so start early to make sure you have lots of time to resolve issues before the deadline.
+-   Read the message to get hints about what the problem is. For example "variable X not present" means that you may have a typo in your variable name.
+-   Search on Piazza to see if other classmates have encountered a similar error (and if not, consider posting a screenshot of the error message)
+-   Come to TA or instructor office hours with your issue
+
+## How do I submit my Problem Set?
+
+You will submit your solutions (.qmd and .pdf) on MarkUs at the link above. You can submit as many times as you like but only your latest submission will be counted.
+
+\newpage
+
+# Question 1: Univariate linear regression models for MarioKart data
+
+Based on documentation in the data set, there are a handful of very high-priced items that were actually bundles of several games/items rather than just Mario Kart. Let's now filter these out - you'll work with \`mariokart2\` for the rest of this question.
+
+```{r}
+# load in data
+mariokart <- read_csv("mariokart.csv")
+glimpse(mariokart)
+```
+
+Based on documentation in the data set, there are a handful of very high-priced items that were actually bundles of several games/items rather than just Mario Kart. Let's now filter these out.
+
+```{r}
+# filter out bundles
+mariokart2 <- 
+  mariokart |> 
+  filter(total_pr < 100)
+
+glimpse(mariokart2)
+```
+
+## (a) Sellers on eBay have the option to include a stock photo as the illustration of the product for sale. Does this choice affect the selling price? Carry out a univariate (single-variable) linear regression analysis and predict the mean selling price of the `total_pr` variable for sellers who do and do not use stock photos (`stock_photo`). After fitting this model and saving the model produced with `lm()` in the R object `Q1a_model`, look at the model summary using `tidy()`, and save the values of the predicted/fitted (estimated mean) price of items sold with and without photos based on this model, rounded to one decimal place.
+
+*Hint: You can pull( ) and then |> and round(). The round() function rounds to the nearest integer by default, but you can specify the number of significant digits using the `digits` argument, for example `round(digits=1)`. You can also pipe a number into the round() function, for example `1.2345 |> round(digits=1)`*
+
+```{r}
+Q1a_pred_price_no_photo <- NULL
+Q1a_pred_price_with_photo <- NULL
+Q1a_model <- NULL
+
+# code you answer here
+
+
+# You can either use filter/select/pull/round here, or just look at the
+# output of tidy() and round it yourself and save the numerical answer
+
+
+
+```
+
+
+
+## (b) Sellers are rated by buyers on eBay, captured in the variable `seller_rating`. To simplify our analysis, we will categorize sellers by whether their rating is "low", "medium", or "high". Create a new tibble `mariokart2` in which you'll define a new variable called `seller_rating_tier` that is "low" if `seller_rating <= 200`, "medium" if `200 < seller_rating <= 4500`, and "high" if `seller_rating > 4500`. Then, carry out a linear regression analysis to model `total_pr` for the "low", "medium", and "high" levels of the new `seller_rating_tier` variable. After fitting this model and looking at the summary, replace NULL in `Q1b_pred_price_high_sellers`, `Q1b_pred_price_medium_sellers`, and `Q1b_pred_price_low_sellers`, with the predicted price of by "high", "medium" and "low" tier sellers based on this model, respectively, rounded to one decimal place. For your calculations, you should extract the exact parameter estimates to do your calculations, not just the rounded values that appear in the printed summary - you'll find the `pull()` and `round()` functions useful for this.
+
+*Hint: The syntax `lm(y ~ x)` will still work even if `x` is a multi-valued categorical explanatory variable.*
+
+*Hint: The round() function rounds to the nearest integer by default, but you can specify the number of significant digits using the `digits` argument, for example `round(digits=1)`. You can also pipe a number into the round() function, for example `1.2345 |> round(digits=1)`*
+
+```{r}
+Q1b_model <- NULL
+
+
+
+
+Q1b_pred_price_high_sellers <- NULL
+Q1b_pred_price_medium_sellers <- NULL
+Q1b_pred_price_low_sellers <- NULL
+
+
+```
+
+
+
+## (c) How many indicator variables are in the model? Describe these indicator variables. Which seller rating group is `lm()` treating as the baseline category? Replace NULL with your answer below (you should type a single integer.)
+
+```{r}
+Q1c_how_many_indicator_variables_in_model <- NULL
+```
+
+
+
+## (d) Create **boxplots** of `total_pr` for each category of seller based on `seller_rating_tier` and save your boxplots in the R object `Q1d_boxplots`. Is this visualization consistent with your estimates from above? Why or why not might this be the case?
+
+```{r}
+Q1d_boxplots <- NULL
+
+# code you answer here
+
+
+
+Q1d_boxplots
+```
+
+
+\newpage
+
+# Question 2: Multivariate linear regression models for MarioKart data
+
+In this question, you'll keep working with the MarioKart data from Question 1, `mariokart2`, but now we'll fit linear regression models with multiple predictors at the same time.
+
+## (a) Fit a **multivariate regression analysis** with **no interaction term** to examine the effect of `seller_rating_tier` and `duration` on `total_pr`, and save this model in the R object `Q2a_model.` After fitting this model and looking at the summary, replace NULL with the estimated coefficients from this model, rounded to 4 decimal places.
+
+```{r}
+Q2a_model <- NULL
+
+Q2a_intercept <- NULL
+Q2a_seller_rating_low <- NULL
+Q2a_seller_rating_medium <- NULL
+Q2a_duration <- NULL
+
+
+# code you answer here
+
+```
+
+
+## (b) Consider the regression model fitted in part (a). Which of the following statements is TRUE? Save your answer as `Q2b_ans`. Save as `Q2b_ans="LETTER"`.
+
+A. The relationship between auction duration and estimated
+mean selling price has a different slope for each seller
+rating tier.
+
+B. The estimated mean selling price is the same for all
+seller rating tiers when auction duration is held constant.
+
+C. The relationship between auction duration and estimated
+mean selling price has the same slope for all seller
+rating tiers.
+
+D. The model assumes that auction duration has no
+relationship with selling price.
+
+```{r}
+Q2b_ans <- NULL
+```
+
+
+## (c) Produce an appropriate plot to visualize your fitted model from part (a), and save your plot in the R object `Q2c_plot`. Write 1-2 sentences comparing the fitted regression lines for the three seller rating groups.
+
+```{r}
+Q2c_plot <- NULL
+
+
+Q2c_plot
+```
+
+
+
+## (d) Now, fit a **multivariate regression analysis** including **interaction term(s)** to examine whether `seller_rating_tier` has an effect on the relationship between `total_pr` and `duration` and save this model in the R object `Q2d_model`.
+
+Note that the full regression model here is:
+
+\begin{align*}
+\texttt{total\_pr}_i = {} & \beta_0 + \beta_1 \times \texttt{seller\_rating\_tier\_low}_i + \beta_2 \times \texttt{seller\_rating\_tier\_medium}_i + \beta_3 \times \texttt{duration}_i \\
+{} & + \beta_4 \times \texttt{seller\_rating\_tier\_low}_i \times \texttt{duration}_i + \beta_5 \times \texttt{seller\_rating\_tier\_medium}_i \times \texttt{duration}_i \\
+{} & + \epsilon_i\\
+\epsilon_i &\sim \text{Normal}(0,\sigma^2)
+\end{align*}
+
+*Hint: The syntax for a multivariate interaction model is `lm(y ~ x1 + x2 + x1 * x2)`.*
+
+```{r}
+Q2d_model <- NULL
+
+
+```
+
+## (e) Consider the interaction model fitted in the previous question. What does the estimated coefficient of `seller_rating_tierlow:duration` represent? Save your answer as `Q2e_ans`.
+
+A. The estimated change in mean selling price for a
+one-day increase in auction duration among sellers
+with low ratings.
+
+B. The estimated difference in the slopes relating
+auction duration to mean selling price between
+sellers with low and high ratings.
+
+C. The estimated difference in mean selling price
+between sellers with low and high ratings when
+auction duration is zero days.
+
+
+D. The estimated difference in the slopes relating
+auction duration to mean selling price between
+sellers with low and medium ratings.
+
+```{r}
+Q2e_ans <- NULL
+```
+
+## (f) The estimated coefficient of `seller_rating_tierlow:duration` is approximately 2.62. Which of the following is the correct interpretation? Save your answer as `Q2f_ans`.
+
+
+A. The estimated slope relating auction duration to
+mean selling price is $2.62 greater for sellers
+with low ratings than for sellers with high ratings.
+
+
+B. For each additional day of auction duration, the
+estimated mean selling price decreases by $2.62
+for sellers with low ratings.
+
+C. For each additional day of auction duration, the
+estimated mean selling price increases by $2.62
+for sellers with low ratings.
+
+D. The estimated mean selling price is $2.62 higher
+for sellers with low ratings than for sellers
+with high ratings.
+
+```{r}
+Q2f_ans <- NULL
+```
+
+## (g) Based on your model from part (d), predict`total_pr` for (i) a MarioKart game sold by a seller with a medium rating in a 5 day auction; (ii) a MarioKart game sold by a seller with a low rating in a 2 day auction; and (iii) a MarioKart game sold by a seller with a high rating in a 6 day auction. To calculate these predictions, use the estimated coefficients rounded to 1 decimal places
+
+```{r}
+Q2g_pred_price_medium_sellers_5_days <- NULL
+Q2g_pred_price_low_sellers_2_days <- NULL
+Q2g_pred_price_high_sellers_6_days <- NULL
+
+
+```
+
+## (h) Produce an appropriate plot to visualize your fitted model from part (d), and save your plot in the R object `Q2h_plot`
+
+```{r}
+Q2h_plot <- NULL
+
+# code you answer here
+
+
+Q2h_plot
+
+
+```
+
+Does the seller rating tier appear to modify the association between duration and total price? Write 1-2 sentences explaining your answer.
+
+
+
+## (i) For this and the following questions, please refer to the 'reading_comparing_mdls.pdf' readings posted on Quercus. Use the `glance()` function to examine the performance of models the models you fit in Q2a (main effects model) and Q2d (interaction model).
+
+```{r}
+Q2i_performance_main_effects_model <- NULL
+Q2i_performance_interaction_model <- NULL
+
+
+Q2i_performance_main_effects_model
+Q2i_performance_interaction_model
+```
+
+## (j) Based on the values of $R^2$, $R^2_{adjusted}$, $AIC$, and $BIC$ you obtained in part (i) above, which model seems to be more appropriate for predicting total price.
+
+
+## (k) Do you think these models could be improved by adding additional predictors and justify your answer by making reference to $R^2$, $R^2_{adjusted}$, $AIC$, and/or $BIC$, as appropriate.
+
