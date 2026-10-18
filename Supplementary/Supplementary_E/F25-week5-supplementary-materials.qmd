@@ -1,0 +1,196 @@
+---
+title: "STA130 Fall 2025 Week 5 Supplementary Code"
+format: html
+editor: visual
+---
+
+```{r}
+#| include: FALSE
+
+library(tidyverse)
+library(openintro)
+library(moderndive)
+library(broom)
+```
+
+# Code for class: MarioKart example
+
+```{r}
+glimpse(mariokart) # from openintro package
+
+mariokart <- mariokart |> 
+  mutate(auction_pr = total_pr - ship_pr)
+
+gg1 = mariokart |> ggplot(aes(x=auction_pr)) +
+  geom_histogram(bins=30, color="black", fill="gray")+ 
+  theme_bw()+ 
+  xlab("Auction price (USD)")
+
+
+# Save plot
+ggsave(filename = "./Plots/mariokart_histogram.png",
+       plot = gg1,
+       width = 4,
+       height = 3)
+
+mariokart |> filter(auction_pr > 100) |> select(auction_pr, title)
+
+mariokart2 <- mariokart |> 
+	filter(auction_pr < 100)
+
+gg2 <- mariokart2 |>
+	ggplot(aes(x=auction_pr)) + 	
+	geom_histogram(bins=20, color="black", fill="gray") +
+  theme_bw()+
+  xlab( "Auction price (USD)")
+
+# Save plot
+ggsave(filename = "./Plots/mariokart_histogram_outlierremov.png",
+       plot = gg2,
+       width = 5,
+       height = 4)
+
+gg3 = mariokart2 |>
+  ggplot(aes(x = duration, y =auction_pr)) +
+  geom_point()+ 
+  theme_bw()+ 
+  labs(y="Auction price (USD)", x = "Auction length (days)")
+
+
+# Save plot
+ggsave(filename = "./Plots/association_plot.png",
+       plot = gg3,
+       width = 6,
+       height = 4)
+
+
+gg4 <- mariokart2 |>
+  ggplot(aes(x = duration, y = total_pr)) +
+  geom_point() +
+  geom_smooth(method="lm", se=FALSE)+ 
+  theme_bw()+ 
+  labs(y="Auction price (USD)", x = "Auction length (days)")
+
+# Save plot
+ggsave(filename = "./Plots/association_plot_plusline.png",
+       plot = gg4,
+       width = 6,
+       height = 4)
+
+# Model with only duration as predictor
+model1 <- lm(auction_pr ~ duration, data = mariokart2)
+model1 |> tidy()
+
+# Get estimated coefficients
+beta0_hat <- model1 |> tidy() |>
+  filter(term == "(Intercept)") |>
+  select(estimate) |>
+  pull()
+
+beta1_hat <- model1 |> tidy() |>
+  filter(term == "duration") |>
+  select(estimate) |>
+  pull()
+
+beta0_hat
+beta1_hat
+
+
+gg5 <- mariokart2 |>
+  ggplot(aes(x=cond, y=auction_pr)) +
+  geom_boxplot()+
+  theme_bw()+ 
+  labs(y="Auction price (USD)", x = "Game condition")
+
+
+# Save plot
+gg5 <- ggsave(filename = "./Plots/boxplot_condition.png",
+       plot = gg5,
+       width = 4,
+       height = 4)
+
+mariokart2 |>
+  group_by(cond) |>
+  summarise(n=n())
+
+
+
+# Model with only condition (binary) as predictor
+model2 <- lm(auction_pr ~ cond, data = mariokart2)
+model2 |> tidy()
+
+mariokart2 |>
+  group_by(cond) |>
+  summarise(n=n(), 
+            mean = mean(auction_pr))
+
+
+gg6<- mariokart2 |>
+  ggplot(aes(x = duration, y = auction_pr, color = cond)) +
+  geom_point() +
+  xlab("Auction length (days)") +
+  ylab("Auction price (USD)")+
+  theme_bw()
+
+# Save plot
+gg6 <- ggsave(filename = "./Plots/duration_color_scatter.png",
+       plot = gg6,
+       width = 6,
+       height = 4)
+
+model3 <- lm(auction_pr ~ duration + cond, data = mariokart2)
+model3 |> tidy()
+gg7<-mariokart2 |> 
+  ggplot(aes(x = duration, y = auction_pr, color=cond)) +
+  geom_point() +
+  xlab("Auction length (days)") +
+  ylab("Auction price (USD)")+
+  theme_bw()+
+  geom_parallel_slopes(se=FALSE)
+
+# Save plot
+ggsave(filename = "./Plots/duration_color_scatter_line.png",
+       plot = gg7,
+       width = 6,
+       height = 4)
+
+
+model4 <- lm(auction_pr ~ duration * cond, data = mariokart2)
+model4 |> tidy()
+
+gg8<-mariokart2 |> 
+  ggplot(aes(x = duration, y = total_pr, color=cond)) +
+  geom_point() +
+  xlab("Auction length (days)") +
+  ylab("Auction price (USD)")+
+  geom_smooth(method="lm", se=FALSE)+
+  theme_bw()
+
+# Save plot
+ggsave(filename = "./Plots/duration_color_int_scatter_line.png",
+       plot = gg8,
+       width = 6,
+       height = 4)
+
+
+
+
+```
+
+```{r}
+# Model comparisons
+
+model1 |> glance() 
+model2 |> glance() 
+model3 |> glance() 
+model4 |> glance() 
+
+model1 |> glance() |> select(r.squared, adj.r.squared, AIC, BIC)
+model2 |> glance() |> select(r.squared, adj.r.squared, AIC, BIC)
+model3 |> glance() |> select(r.squared, adj.r.squared, AIC, BIC)
+model4 |> glance() |> select(r.squared, adj.r.squared, AIC, BIC)
+
+```
+
+
+
