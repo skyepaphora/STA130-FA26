@@ -1,5 +1,5 @@
 ---
-title: "STA130 Fall 2025 Week 5 Supplementary Code"
+title: "STA130 Fall 2026 Week 5 Supplementary Code"
 format: html
 editor: visual
 ---
@@ -191,6 +191,3 @@ model3 |> glance() |> select(r.squared, adj.r.squared, AIC, BIC)
 model4 |> glance() |> select(r.squared, adj.r.squared, AIC, BIC)
 
 ```
-
-
-
