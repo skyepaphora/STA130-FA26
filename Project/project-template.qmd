@@ -1,0 +1,166 @@
+---
+title: "Project Title"
+subtitle: "Project subtitle (if applicable)"
+author: "Your names | Group #X"
+date: today
+format:
+  beamer:
+    theme: Madrid
+    colortheme: default
+    fonttheme: serif
+    aspectratio: 169
+    slide-level: 2
+    toc: false
+    incremental: false
+    pdf-engine: pdflatex
+    keep-tex: false
+editor: visual
+---
+
+```{r setup, include=FALSE}
+library(gridExtra)
+library(tidyverse)
+library(knitr)
+library(cowplot)
+library(moderndive)
+knitr::opts_chunk$set(
+echo = FALSE,
+include = TRUE,
+warning = FALSE,
+message = FALSE,
+results = "markup",
+fig.width = 6,
+fig.height = 3.5,
+fig.align = "center",
+out.width = "80%"
+)
+```
+
+```{r load-data, echo=FALSE}
+### Read in data
+
+```
+
+## Introduction
+
+**Overall Theme:** \[State your unifying theme\]
+
+**Research Goal:** \[What are you investigating?\]
+
+**Target Population:** \[Who/what is being studied?\]
+
+**Audience:** \[Who is this for?\]
+
+## Data Summary
+
+**Key Variables:**
+
+-   Variable 1: \[Description\]
+-   Variable 2: \[Description\]
+
+**Data Wrangling:**
+
+-   \[Any transformations, new variables created\]
+
+## Question #1: \[Name - Question Statement\]
+
+\[Clear statement of the research question\]
+
+## Q1: Variables & Approach
+
+**Variables used:**
+
+-   \[List variables\]
+
+**New variables/groups defined:**
+
+-   \[Any created variables\]
+
+## Q1: Visualization
+
+```{r q1-plot}
+#Your plot code here 
+iris |>
+  ggplot(aes(x=Species, y=Sepal.Length)) +
+  geom_boxplot() +
+  ylab("Sepal Length")
+```
+
+## Q1: Summary Table
+
+```{r q1-table}
+#Your summary table here
+
+# Here is an example of a nicely formatted table, using the kable function
+iris |>
+  group_by(Species) |>
+  summarise(
+    Count = n(),
+    `Avg Sepal Length` = round(mean(Sepal.Length), 1),
+    `Avg Petal Length` = round(mean(Petal.Length), 1)
+  ) |>
+  kable(caption = "Comparison of Iris Species")
+```
+
+Insights for Q1
+
+## Question #2: \[Name - Question Statement\]
+
+\[Repeat structure from Q1\]
+
+## Q2: Variables & Approach
+
+## Q2: Visualization
+
+## Q2: Summary Table
+
+## Question #3: \[Name - Question Statement\]
+
+## Q3: Variables & Approach
+
+## Q3: Visualization
+
+## Q3: Summary Table
+
+## Question #4: \[Name - Question Statement\] (if applicable)
+
+## Q4: Variables & Approach
+
+## Q4: Visualization
+
+## Q4: Summary Table
+
+## Overall Limitations
+
+It is optional to include this as a stand-alone section at the end, you could also choose to discuss this at the end of each research question
+
+**Data Limitations:**
+
+-   \[Limitation 1\]
+-   \[Limitation 2\]
+
+**Future Directions:**
+
+-   \[How these could be addressed\]
+
+## Overall Conclusion
+
+**Key Findings:**
+
+-   \[Finding 1 related to theme\]
+-   \[Finding 2 related to theme\]
+-   \[Finding 3 related to theme\]
+
+**Connection to Theme:**
+
+\[How findings relate back to unifying theme\]
+
+## References & Acknowledgements (if applicable)
+
+**References:**
+
+-   \[Citation 1, if applicable\]
+
+**Acknowledgements:**
+
+-   \[Any acknowledgements, if applicable\]
