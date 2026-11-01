@@ -1,0 +1,124 @@
+---
+title: "Untitled"
+format: pdf
+---
+
+```{r setup}
+library(tidyverse)
+library(broom)
+library(cowplot)
+```
+
+```{r load}
+# load amazon books data
+books <- read_csv("amazonbooks.csv")
+books <- na.omit(books)
+```
+# Data cleaning
+
+```{r}
+library(janitor)
+books <- books |> 
+  clean_names() |> 
+  mutate(
+    length = case_when(num_pages <= 400 ~ "short",
+                       num_pages > 400 ~ "long"),
+    list_price= case_when(list_price >50 ~ NA,
+                              list_price <=50~list_price))
+
+set.seed(2917)
+book_imp <- mice::mice(books)
+books2 <- complete(book_imp,1)
+
+rm(books)
+```
+
+# Class Activities
+
+## Normal models
+
+```{r}
+# Book weight by binding type
+
+gg1 <- books2 |> 
+  ggplot(aes(x= weight_oz))+ 
+  geom_histogram(color= "black", fill = "gray", bins = 15)+ 
+  labs(title = "Weight of Amazon books", 
+       x = "Weight (oz)")+
+  theme_bw()+
+  scale_x_continuous(breaks = scales::pretty_breaks(n=10))
+
+ggsave("./plots/book_weight_histogram.png",
+      plot = gg1,
+      width= 5, 
+      height= 3, 
+      dpi = 300)
+
+books2 |> 
+  summarise(mean = mean(weight_oz),
+            sd = sd(weight_oz))
+```
+
+## SLR crash course
+
+
+```{r}
+model1 <- lm(weight_oz ~ num_pages, data = books2)
+model1 |> tidy()
+```
+
+## MLR with categorical variables
+
+```{r}
+model2 <- lm(weight_oz ~ num_pages + hard_or_paper, data = books2)
+model2 |> tidy()
+
+```
+
+## MLR with interaction
+
+```{r}
+
+model3 <- lm(weight_oz ~ height*length, data = books2)
+model3 |> tidy()
+
+gg2 <- books2 |> 
+  ggplot(aes(x = height, y = weight_oz, colour = length, lty = length)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)+ 
+  theme_bw()+ 
+  labs(y = "Weight (oz)", x = "Height (in)")
+
+ggsave("./plots/book_weight_int_histogram.png",
+      plot = gg2,
+      width= 5, 
+      height= 3, 
+      dpi = 300)
+```
+
+
+
+## Model comparison 
+
+```{r}
+
+model1 <- lm(weight_oz ~ num_pages, data = books2)
+model2 <- lm(weight_oz ~ num_pages+ hard_or_paper, data = books2)
+model3 <- lm(weight_oz ~  height*length, data = books2)
+model4 <- lm(weight_oz ~ num_pages*hard_or_paper, data = books2)
+model5 <- lm(weight_oz ~ height*length + hard_or_paper, data = books2)
+
+list(
+  model1 = model1,
+  model2 = model2,
+  model3 = model3,
+  model4 = model4,
+  model5 = model5
+) |>
+  map_dfr(
+    ~ glance(.x) |>
+      select(r.squared, adj.r.squared, AIC, BIC),
+    .id = "model"
+  )
+
+```
