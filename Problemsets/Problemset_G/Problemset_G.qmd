@@ -1,0 +1,316 @@
+---
+title: "STA130 - Problem Set G (Fall 2026)"
+author: "YOUR NAME"
+format: pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(rpart)
+library(partykit)
+```
+
+# Problem Set Objectives
+
+The weekly problem sets are designed to do the following:
+
+-   Provide structured practice with immediate feedback, allowing students to identify and correct misconceptions early
+-   Build practical data analysis skills through hands-on experience with R, reinforcing statistical concepts through active application
+-   Develop reproducible workflow habits, namely through the use of Quarto to combine code, output, and text.
+
+# Instructions
+
+## How do I check my work
+
+You will access the Problem Set and do your work on JupyterHub (link on Quercus)
+
+When you click `Render` to create a pdf of your solutions, you may get a popup that says "Popup Blocked - We attempted to open an external browser window...". If you get this message, click `Cancel` and then you will be able to open your .pdf file by selecting it in the bottom right window (in the same folder as your .qmd file).
+
+Once you are done with a question and want to check if it is correct, you will need to download your .qmd and .pdf files and upload them to MarkUs to run the tests.
+
+Usually when you do an assignment, you don't find out whether your answers are correct until *after* the deadline, when you get your grade back. However, using MarkUs, you can submit your work before the deadline and run tests to check your solutions!
+
+*Note:* Some parts of some questions may not be covered by tests in MarkUs, but you're still responsible for reviewing the posted solutions and make sure you understand them.
+
+**To download your files from JupyterHub, go to the bottom right window and do the following:**
+
+-   Select the files you want to download (likely .qmd and .pdf)
+-   Click on More $\Rightarrow$ Export
+
+**To upload your work to MarkUs to run the tests:**
+
+-   Go to MarkUs: <https://markus.teach.cs.toronto.edu/markus/courses>
+-   Open the current assignment and upload your file(s) (note that by default, the files you download from JupyterHub will likely be in your `Downloads` folder)
+-   Run the tests
+
+## What to do if a test fails on MarkUs
+
+-   Take a deep breath! Your work won't really be graded until the deadline, so start early to make sure you have lots of time to resolve issues before the deadline.
+-   Read the message to get hints about what the problem is. For example "variable X not present" means that you may have a typo in your variable name.
+-   Search on Piazza to see if other classmates have encountered a similar error (and if not, consider posting a screenshot of the error message)
+-   Come to TA or instructor office hours with your issue
+
+## How do I submit my Problem Set?
+
+You will submit your solutions (.qmd and .pdf) on MarkUs at the link above. You can submit as many times as you like but only your latest submission will be counted.
+
+\newpage
+
+# Question 1
+
+Two classification trees were built to predict which individuals have a disease using different sets of potential predictors. We use each of these trees to predict disease status for 100 new individuals. Below are confusion matrices corresponding to these two classification trees.
+
+**Tree A**
+
+|                    | Disease | No disease |
+|--------------------|---------|------------|
+| Predict disease    | 35      | 20         |
+| Predict no disease | 3       | 42         |
+
+**Tree B**
+
+|                    | Disease | No disease |
+|--------------------|---------|------------|
+| Predict disease    | 23      | 4          |
+| Predict no disease | 15      | 58         |
+
+## (a) Calculate the accuracy, false-positive rate, and false negative rate for each classification tree. Here, a "positive" result means we predict an individual has the disease and a "negative" result means we predict they do not. Replace the values of NULL below by your answers (use formulas to calculate your answers instead of typing the values in decimals, for example 1/3 instead of 0.333)
+
+```{r}
+Q1a_treeA_overall_accuracy <- NULL
+Q1a_treeA_false_positive_rate <- NULL
+Q1a_treeA_false_negative_rate <- NULL
+
+Q1a_treeB_overall_accuracy <- NULL
+Q1a_treeB_false_positive_rate <- NULL
+Q1a_treeB_false_negative_rate <- NULL
+
+# Print your results
+Q1a_treeA_overall_accuracy
+Q1a_treeA_false_positive_rate
+Q1a_treeA_false_negative_rate
+
+Q1a_treeB_overall_accuracy
+Q1a_treeB_false_positive_rate
+Q1a_treeB_false_negative_rate
+```
+
+## (b) Suppose the disease is very serious if untreated. Explain which classifier you would prefer to use. You should make specific reference to the rates you calculated above in your answer (2-3 sentences).
+
+
+
+## (c) Now suppose the treatment has very serious side effects. Explain which classifier you would prefer to use. You should make specific reference to the rates you calculated above in your answer (2-3 sentences).
+
+
+
+\newpage
+
+# Question 2
+
+Data was collected on 30 cancer patients to investigate the effectiveness (Yes/No) of a treatment. Two quantitative variables, $x_i \in (0,1), i=1,2$, are considered to be important predictors of effectiveness. Suppose that the rectangles labelled as nodes in the scatterplot below represent nodes of a classification tree.
+
+```{r, echo=FALSE, fig.height=3, fig.width=8}
+dat <- read_csv("dat.csv")
+ggplot(dat, aes(x1, x2, shape = factor(type_cat), colour = factor(type_cat))) +
+  geom_point(size = 2) + 
+  theme_minimal() + 
+  scale_color_discrete(name = "Effectiveness", breaks = c("Yes", "No")) +
+  scale_shape_discrete(name = "Effectiveness", breaks = c("Yes", "No")) +
+  geom_segment(aes(y = 0, yend = 0.5, x = 0.53, xend = 0.53), size = 0.1, colour = "navyblue") +
+  geom_segment(aes(x = 0, xend = 1, y = 0.5, yend = 0.5), size = 0.1, colour = "navyblue") +
+  geom_segment(aes(y = 0.5, yend = 1, x = 0.5, xend = 0.5), size = 0.1, colour = "navyblue") +
+  annotate("text", x = 0.15, y = 0.25, label = "Node 1") +
+  annotate("text", x = 0.75, y = 0.8, label = "Node 2") +
+  annotate("text", x = 0.15, y = 0.8, label = "Node 3") +
+  annotate("text", x = 0.75, y = 0.25, label = "Node 4")
+```
+
+## The diagram above is the geometric interpretation of a classification tree to predict drug effectiveness based on two predictors, x1 and x2. What is the predicted class for each node, assuming that we predict "effective" if more than 50% of the values in a given node are "Yes"? Replace NULL by your answers
+
+```{r}
+# For the proportion of yes, specify your answer in fractional form 
+# (e.g. 1/3 instead of 0.333)
+Q2_node1_proportion_Yes <- NULL
+Q2_node2_proportion_Yes <- NULL
+Q2_node3_proportion_Yes <- NULL
+Q2_node4_proportion_Yes <- NULL
+
+# For each prediction, put either "effective" or "not effective" 
+# (be sure to use exactly the same spelling and to use quotation marks)
+Q2_node1_prediction <- NULL
+Q2_node2_prediction <- NULL
+Q2_node3_prediction <- NULL
+Q2_node4_prediction <- NULL
+
+```
+
+
+
+\newpage
+
+# Question 3
+
+Using data from the Gallup World Poll (and the World Happiness Report), we are interested in predicting which factors influence life expectancy around the world. These data are in the file `happinessdata_2017.csv`.
+
+```{r, message=FALSE}
+happiness2017 <- read_csv("happinessdata_2017.csv")
+```
+
+## (a) Begin by creating a new variable called `life_exp_category` which takes the value "Good" for countries with a life expectancy higher than 65 years, and "Poor" otherwise, and add this new variable to the `happinessdata_2017` tibble. Any observations whose `life_exp` is NA should be removed (you can use the `is.na()` function to check if a value is NA).
+
+```{r}
+# Update the happiness2017 object here
+
+### Do not change the line below
+Q2a_happiness2017 <- happiness2017 # DO NOT CHANGE THIS LINE OF CODE
+```
+
+## (b) Below, a chunk of R code divides the happiness data into two parts. Build a classification tree to predict which countries have `Good` vs `Poor` life expectancy, using only the `social_support` variable as a predictor, based only on the `happiness_training` tibble. Plot the resulting tree using `plot(as.party())`.
+
+```{r}
+# DO NOT CHANGE THIS CODE CHUNK
+set.seed(130) # DO NOT CHANGE THIS LINE
+
+n <- nrow(happiness2017); # number of obs in the full dataset
+n
+
+# Use slice_sample to randomly select 80% of observations from happiness2017
+happiness_training <- slice_sample(happiness2017, prop = 0.8)
+# With anti_join(), we're putting all observations from happiness2017 which are
+# NOT in happiness_training in the new happiness_testing tibble
+# In other words, each observation from happiness_training is in exactly one of 
+# the two tibbles happiness_training and happiness_testing
+happiness_testing <- anti_join(happiness2017, happiness_training)
+```
+
+*Note: You will not be tested on joins, but some information is provided here in case you are interested*
+
+We used the `anti_join()` function here to return the portion of observations in `happiness2017` which are **not** in `happiness_training`. In week 7, we showed visually what the `full_join()` function does - based on a linking variable, combine 2 datasets, where any matching value for the linking variable across the two datasets results in the 2 observations being combined into 1 row in the new dataset (and any unmatched value results in NA values being populated for any column in the other). Other relevant join functions that are in `dplyr`:
+
+-   `inner_join` only keeps rows where the linking variable value is in both datasets
+
+-   `left_join` keeps all observations from the first dataset (but any unmatched value from the second dataset is not included)
+
+-   `right_join` keeps all observations from the second dataset (but any unmatched value from the first dataset is not included)
+
+-   `semi_join` is similar to `inner_join`, but will not create multiple rows if there are multiple matches between 2 variables.
+
+This page has nice Venn-Diagrams visually showing each: <https://intro2r.library.duke.edu/join.html>
+
+Some of these may be useful for your final project!
+
+```{r}
+# Fit the tree based on training data
+
+```
+
+## (c) Now build a second classification tree, again using the `happiness_training` tibble, to predict which countries have good vs poor life expectancy, with `logGDP`, `social_support`, `freedom`, and `generosity` as potential predictors. Plot your tree using `plot(as.party())`.
+
+```{r}
+# Fit the tree based on training data
+
+```
+
+## (d) In this part, you will use the tree you built in (b) to make predictions for the observations in the `happiness_testing` tibble. You will report the sensitivity (true positive rate), specificity (true negative rate) and accuracy. Here you will treat "Good" life expectancy as a positive response/prediction. Replace NULL with your answers below
+
+```{r}
+### Predictions for observations happiness_testing tibble using tree from (b)
+
+
+# Type your answers here, as functions (e.g. 1/3 instead of 0.33)
+Q3d_accuracy <- NULL
+Q3d_true_positive_rate <- NULL
+Q3d_true_negative_rate <- NULL
+
+Q3d_accuracy
+Q3d_true_positive_rate
+Q3d_true_negative_rate
+```
+
+
+
+## (e) You'll now use code similar to what was given in (d) to make predictions for the observations in the `happiness_testing` tibble using the tree you fit in (c). You will report the sensitivity (true positive rate), specificity (true negative rate) and accuracy. Again, you will treat "Good" life expectancy as a positive response/prediction. Replace NULL with your answers below
+
+```{r}
+### Predictions for observations happiness_testing tibble using tree from (b)
+
+
+# Type your answers here, as functions (e.g. 1/3 instead of 0.33)
+Q3e_accuracy <- NULL
+Q3e_true_positive_rate <- NULL
+Q3e_true_negative_rate <- NULL
+
+Q3e_accuracy
+Q3e_true_positive_rate
+Q3e_true_negative_rate
+```
+
+
+## (f) Fill in the following table using the tree you constructed in part (c). Does the fact that some of the values are missing (NA) prevent you from making predictions for the life expectancy category for these observations?
+
+|   | `logGDP` | `social_support` | `freedom` | `generosity` | Predicted life expectancy category |
+|------------|------------|------------|------------|------------|------------|
+| Obs 1 | 9.56 | 0.74 | NA | -0.25 |  |
+| Obs 2 | 10.1 | 0.84 | 0.80 | -0.219 |  |
+| Obs 3 | 11.2 | 0.88 | 0.77 | 0.1 |  |
+
+```{r}
+# Repace NULL by "Poor" or "Good" (make sure to use the correct spelling and use quotation marks)
+Q3f_obs1_prediction <- NULL
+Q3f_obs2_prediction <- NULL
+Q3f_obs3_prediction <- NULL
+
+```
+
+
+## (g) In most cases, two classification trees will make different predictions for some new observations. Using the classification trees you built in parts (b) and (c), fill in the table below with values which would lead the specified predictions.
+
+| `logGDP` | `social_support` | `freedom` | `generosity` | Pred life expectancy category based on (b) | Pred life expectancy category based on (c) |
+|------------|------------|------------|------------|------------|------------|
+|  |  |  |  | **Poor** | **Good** |
+|  |  |  |  | **Good** | **Poor** |
+
+
+\newpage
+
+# Question 4
+
+For each scenario below, indicate whether you would use linear regression or classification and briefly explain why.
+
+## (a) Predicting a patient's blood pressure based on health variables such as age, weight, and level of physical activity. Replace NULL with either "linear regression" or "classification" in the code chunk below, and write a brief justification below the code chunk.
+
+```{r}
+Q4a_type <- NULL
+```
+
+*Justification*
+
+
+## (b) Determining whether an email is spam or not spam. Replace NULL with either "linear regression" or "classification" in the code chunk below, and write a brief justification below the code chunk.
+
+```{r}
+Q4b_type <- NULL
+```
+
+*Justification*
+
+
+
+## (c) Estimating the sale price of a house. Replace NULL with either "linear regression" or "classification" in the code chunk below, and write a brief justification below the code chunk.
+
+```{r}
+Q4c_type <- NULL
+```
+
+*Justification*
+
+
+## (d) Diagnosing a patient's tumour as malignant or benign. Replace NULL with either "linear regression" or "classification" in the code chunk below, and write a brief justification below the code chunk.
+
+```{r}
+Q4d_type <- NULL
+```
+
+*Justification*
+
