@@ -1,0 +1,369 @@
+---
+title: "STA130 Week 7 Supplementary Materials (Fall 2025)"
+format: pdf
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(openintro)
+library(broom)
+```
+
+```{r promotions1}
+# Salespeople example (from https://peopleanalytics-regression-book.org)
+salespeople_full <- read_csv("salespeople.csv") 
+set.seed(130)
+salespeople <- salespeople_full |> slice_sample(n=300) # Sample of 300 observations
+salespeople_new <- salespeople_full |> anti_join(salespeople)
+
+
+# Linear Regression example
+salespeople |>
+  ggplot(aes(x=sales, y=customer_rate)) +
+  geom_point(alpha=0.5) +
+  geom_smooth(method="lm", se=FALSE)
+
+salespeople |> ggplot(aes(x = sales, y=promoted)) +
+  geom_point(alpha=0.5)
+
+salespeople |> ggplot(aes(x = sales, y=promoted)) +
+  geom_point(alpha=0.5) +
+  geom_smooth(method="lm", se=FALSE)
+
+salespeople |> ggplot(aes(x = sales, y=promoted)) +
+  geom_point(alpha=0.5) +
+  geom_smooth(method="glm", method.args=list(family = "binomial"), se=FALSE)
+
+
+# Fit logistic regression model with one numerical predictor
+model1 <- glm(promoted ~ sales, data=salespeople, family = "binomial") 
+model1 |> 
+  tidy() |>
+  select(term, estimate)
+
+# Lets make predictions for new data
+# The .fitted column gives us the predicted values
+predictions_mod1 <- model1 |> augment(type.predict = "response", 
+                                      newdata = salespeople_new)
+predictions_mod1 |> select(promoted, sales, .fitted) |> slice(1:6)
+
+
+
+
+# Plotting fitted values onto the plot
+predictions_mod1 |> 
+  ggplot(aes(x = sales)) +
+ # geom_segment(aes(xend = sales, y = promoted, yend = .fitted), 
+ #              alpha = 0.4) +
+  geom_point(aes(y = promoted), alpha = 0.6) +
+  geom_point(aes(x=sales, y = .fitted), color = "black", alpha=1, pch=3) +
+  geom_line(aes(x=sales, y = .fitted), color = "black", alpha=0.3, lty=2) +
+  labs(x = "Sales", 
+       y = "Probability of Promotion") 
+
+# Plotting just the predicted probabilities, not the true values
+predictions_mod1 |> 
+  ggplot(aes(x = sales)) +
+  geom_point(aes(x=sales, y = .fitted), color = "black", alpha=0.3) +
+  geom_line(aes(x=sales, y = .fitted), color = "black", alpha=0.3, lty=2) +
+  labs(x = "Sales", 
+       y = "Probability of Promotion") 
+
+
+## Construct confusion matrix based on logistic regression with a given threshold
+# Function to get confusion matrix for any threshold
+get_confusion_matrix_logistic <- function(model, threshold, newdata, positive_class = NULL) {
+  
+  # Get the response variable name from the model
+  response_var <- as.character(formula(model)[[2]])
+  
+  # Get predictions
+  predictions <- augment(model, type.predict = "response", newdata = newdata)
+  
+  # Get unique values of the actual response
+  actual_values <- sort(unique(newdata[[response_var]]), decreasing = TRUE)
+  
+  # If positive_class not specified, use the higher value as positive
+  if (is.null(positive_class)) {
+    positive_class <- actual_values[1]
+  }
+  
+  # Determine negative class
+  negative_class <- setdiff(actual_values, positive_class)
+  
+  # Create predicted class based on threshold
+  predictions <- predictions |>
+    mutate(
+      predicted_class = ifelse(.fitted >= threshold, positive_class, negative_class),
+      actual_class = newdata[[response_var]]  # Add actual values to predictions df
+    )
+  
+  # Create confusion matrix with specified order
+  confusion_matrix <- with(predictions, 
+                          table(Predicted = factor(predicted_class, levels = c(positive_class, negative_class)),
+                                Actual = factor(actual_class, levels = c(positive_class, negative_class))))
+  
+  return(confusion_matrix)
+}
+
+# Get confusion matrix with 0.5 threshold
+conf_mat <- get_confusion_matrix_logistic(model1, 0.5, newdata=salespeople_new, positive_class=1)
+conf_mat
+
+(conf_mat[1,1] + conf_mat[2,2]) / sum(conf_mat) # accuracy
+conf_mat[1,1] / (conf_mat[1,1] + conf_mat[2,1]) # TPR
+conf_mat[2,2] / (conf_mat[1,2] + conf_mat[2,2]) # TNR
+
+## Now get confusion matrices for different thresholds
+get_confusion_matrix_logistic(model1, 0.3, newdata=salespeople_new, positive_class=1)
+get_confusion_matrix_logistic(model1, 0.5, newdata=salespeople_new, positive_class=1)
+get_confusion_matrix_logistic(model1, 0.7, newdata=salespeople_new, positive_class=1)
+
+
+
+### ROC and AUC for model 1 on new data
+# ROC Curve
+library(yardstick)
+ 
+predictions <- augment(model1, type.predict = "response", newdata=salespeople_new) |>
+     mutate(promoted = factor(promoted, levels = c("1", "0"))) 
+ 
+# Create ROC curve
+roc_data <- roc_curve(predictions, truth = promoted, .fitted, event_level = "first")
+ 
+# Plot
+autoplot(roc_data) +
+     labs(title = "ROC Curve for Promotion Model")
+
+autoplot(roc_data) +
+     labs(title = "ROC Curve for Promotion Model") +
+  geom_point(x=1-0.921, y=0.846, color="red") +
+  geom_point(x=1-1, y=0.769, color="blue") +
+  geom_point(x=1-1, y=0.692, color="orange")
+
+# Get AUC
+auc_model1 <- roc_auc(predictions, truth = promoted, .fitted)
+auc_model1
+
+
+```
+
+```{r promotions2}
+
+
+######
+# Using c=0.8
+augment(model1, type.predict = "response") |> 
+  mutate(predicted_class = ifelse(.fitted >= 0.8, 1, 0)) |>
+  ggplot(aes(x = sales)) +
+  geom_point(aes(y = promoted), alpha = 0.6) +
+  geom_segment(aes(x = sales, xend = sales, 
+                   y = .fitted, yend = predicted_class,
+                   color = factor(predicted_class)),
+               alpha = 0.5) +
+  geom_point(aes(x = sales, y = .fitted), color = "black", alpha = 0.3) +
+  geom_line(aes(x = sales, y = .fitted), color = "black", alpha = 0.3, lty = 2) +
+  geom_hline(yintercept = 0.8, color = "blue", linetype = "dashed") +
+  scale_color_manual(values = c("red", "darkgreen"), 
+                     labels = c("Predict No", "Predict Yes")) +
+  labs(x = "Sales", 
+       y = "Probability of Promotion",
+       color = "Prediction")
+
+# Using c=0.25
+augment(model1, type.predict = "response") |> 
+  mutate(predicted_class = ifelse(.fitted >= 0.25, 1, 0)) |>
+  ggplot(aes(x = sales)) +
+  geom_point(aes(y = promoted), alpha = 0.6) +
+  geom_segment(aes(x = sales, xend = sales, 
+                   y = .fitted, yend = predicted_class,
+                   color = factor(predicted_class)),
+               alpha = 0.5) +
+  geom_point(aes(x = sales, y = .fitted), color = "black", alpha = 0.3) +
+  geom_line(aes(x = sales, y = .fitted), color = "black", alpha = 0.3, lty = 2) +
+  geom_hline(yintercept = 0.25, color = "blue", linetype = "dashed") +
+  scale_color_manual(values = c("red", "darkgreen"), 
+                     labels = c("Predict No", "Predict Yes")) +
+  labs(x = "Sales", 
+       y = "Probability of Promotion",
+       color = "Prediction")
+
+
+
+
+# ROC Curve
+library(yardstick)
+ 
+predictions <- augment(model1, type.predict = "response") |>
+     mutate(promoted = factor(promoted, levels = c("1", "0"))) 
+ 
+# Create ROC curve
+roc_data <- roc_curve(predictions, truth = promoted, .fitted, event_level = "first")
+ 
+# Plot
+autoplot(roc_data) +
+     labs(title = "ROC Curve for Promotion Model")
+
+# Get AUC
+auc_model1 <- roc_auc(predictions, truth = promoted, .fitted, event_level = "first")
+
+
+## Multiple predictors
+model2 <- glm(promoted ~ sales + performance,
+              data = salespeople, family = "binomial")
+model2 |> tidy() |> select(term, estimate)
+
+model3 <- glm(promoted ~ sales * performance,
+              data = salespeople, family = "binomial")
+model3 |> tidy() |> select(term, estimate) 
+
+model4 <- glm(promoted ~ sales + performance + customer_rate,
+              data = salespeople, family = "binomial")
+model4 |> tidy()  |> select(term, estimate)
+
+
+# ROC curves for both
+# Get predictions from both models
+pred1 <- augment(model1, type.predict = "response") |>
+  mutate(model = "Model1")
+
+pred2 <- augment(model2, type.predict = "response") |>
+  mutate(model = "Model2")
+
+pred3 <- augment(model3, type.predict = "response") |>
+  mutate(model = "Model3")
+
+pred4 <- augment(model4, type.predict = "response") |>
+  mutate(model = "Model4")
+
+# Combine and plot both ROC curves
+bind_rows(pred1, pred2, pred3, pred4) |> 
+  mutate(promoted = factor(promoted, levels = c("1", "0"))) |>
+  group_by(model) |>
+  roc_curve(promoted, .fitted, event_level = "first") |>
+  autoplot()
+  
+```
+
+```{r spam-examples2, eval=FALSE}
+# Now we'll fit several models with the spam data
+set.seed(123)
+email1 <- email |> slice_sample(prop=0.8) 
+email2 <- email |> anti_join(email1)
+
+# Content trigger words
+email_mod1 <- glm(spam ~ winner + viagra + password + dollar, data=email1, family="binomial")
+email_mod1 |> tidy()
+
+# Email structure features
+email_mod2 <- glm(spam ~ to_multiple + attach + format + line_breaks, data=email1, family="binomial")
+email_mod2 |> tidy()
+
+# Length metrics
+email_mod3 <- glm(spam ~ num_char + exclaim_mess + line_breaks + attach, data=email1, family="binomial")
+email_mod3 |> tidy()
+
+# All predictors
+email_mod4 <- glm(spam ~ ., data=email1, family="binomial")
+email_mod4 |> tidy()
+
+
+# Make predictions using each of the models
+pred1 <- email_mod1 |> augment(type.predict = "response", newdata=email2) |>
+  mutate(model = "Model1 (Trigger words)")
+pred2 <- email_mod2 |> augment(type.predict = "response", newdata=email2) |>
+  mutate(model = "Model2 (Email structure)")
+pred3 <- email_mod3 |> augment(type.predict = "response", newdata=email2) |>
+  mutate(model = "Model3 (Length metrics)")
+pred4 <- email_mod4 |> augment(type.predict = "response", newdata=email2) |>
+  mutate(model = "Model4 (All predictors)")
+
+
+
+# Combine and plot both ROC curves
+bind_rows(pred1, pred2, pred3, pred4) |> 
+  mutate(promoted = factor(spam, levels = c("1", "0"))) |>
+  group_by(model) |>
+  roc_curve(promoted, .fitted, event_level = "first") |>
+  autoplot()
+
+roc_auc(pred1, truth = spam, .fitted, event_level = "second")
+roc_auc(pred2, truth = spam, .fitted, event_level = "second")
+roc_auc(pred3, truth = spam, .fitted, event_level = "second")
+roc_auc(pred4, truth = spam, .fitted, event_level = "second")
+roc_auc(pred5, truth = spam, .fitted, event_level = "second")
+
+```
+
+```{r spam-examples, eval=FALSE}
+# Now we'll fit several models with the spam data
+set.seed(123)
+email1 <- email |> slice_sample(prop=0.8) 
+email2 <- email |> anti_join(email1)
+
+email_mod1 <- glm(spam ~ ., data=email1, family="binomial")
+email_mod1 |> tidy()
+#email_mod1 |> tidy() |>  arrange(p.value)
+
+email_mod2 <- glm(spam ~ to_multiple + number + winner + exclaim_mess + attach + line_breaks, data=email1, family="binomial")
+email_mod2 |> tidy()
+
+email_mod3 <- glm(spam ~ to_multiple + number, data=email1, family="binomial")
+email_mod3 |> tidy()
+
+email_mod4 <- glm(spam ~ to_multiple + line_breaks, data=email1, family="binomial")
+email_mod4 |> tidy()
+
+email_mod5 <- glm(spam ~ line_breaks + attach, data=email1, family="binomial")
+email_mod5 |> tidy()
+
+
+# Make predictions using each of the models
+pred1 <- email_mod1 |> augment(type.predict = "response", newdata=email2) |>
+  mutate(model = "Model1")
+pred2 <- email_mod2 |> augment(type.predict = "response", newdata=email2) |>
+  mutate(model = "Model2")
+pred3 <- email_mod3 |> augment(type.predict = "response", newdata=email2) |>
+  mutate(model = "Model3")
+pred4 <- email_mod4 |> augment(type.predict = "response", newdata=email2) |>
+  mutate(model = "Model4")
+pred5 <- email_mod5 |> augment(type.predict = "response", newdata=email2) |>
+  mutate(model = "Model5")
+
+
+# Combine and plot both ROC curves
+bind_rows(pred1, pred2, pred3, pred4, pred5) |> 
+  mutate(promoted = factor(spam, levels = c("1", "0"))) |>
+  group_by(model) |>
+  roc_curve(promoted, .fitted, event_level = "first") |>
+  autoplot()
+
+roc_auc(pred1, truth = spam, .fitted, event_level = "second")
+roc_auc(pred2, truth = spam, .fitted, event_level = "second")
+roc_auc(pred3, truth = spam, .fitted, event_level = "second")
+roc_auc(pred4, truth = spam, .fitted, event_level = "second")
+roc_auc(pred5, truth = spam, .fitted, event_level = "second")
+
+```
+
+```{r}
+# Heart transplant survival
+heart_transplant |> ggplot(aes(x = age, y = survived)) +
+  geom_point()
+
+
+# Email example
+email |> ggplot(aes(x = exclaim_mess, y = spam)) +
+  geom_point(alpha=0.5)
+
+email |> ggplot(aes(x = log(exclaim_mess), y = spam)) +
+  geom_point(alpha=0.5)
+
+
+email |> ggplot(aes(x=num_char, y=line_breaks, color=spam)) +
+  geom_point(alpha=0.5)
+
+email |> ggplot(aes(x=log(num_char), y=log(line_breaks), color=spam)) +
+  geom_point(alpha=0.5)
+```
