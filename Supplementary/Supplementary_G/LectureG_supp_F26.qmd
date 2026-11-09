@@ -1,0 +1,52 @@
+---
+title: "STA130 Lecture G (Fall 2026)"
+format: pdf
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(rpart)
+library(partykit)
+library(NHANES)
+```
+
+# Code from class slides
+
+```{r}
+NHANES <- read_csv("NHANES_data.csv")
+
+
+NHANES |> 
+  select(Age, Race3, Work, DaysMentHlthBad, DaysPhysHlthBad,
+         Depressed, SleepHrsNight, SleepTrouble) |>
+  glimpse()
+
+
+# Need to run library(rpart) to fit a tree
+library(rpart) # Package which includes the rpart() function, used to build trees
+library(partykit) # Package which includes as.party(), used to visualize trees
+tree <- rpart(SleepTrouble ~ SleepHrsNight + DaysPhysHlthBad, data = NHANES)
+plot(as.party(tree), gp=gpar(cex=5), type = "simple")
+plot(as.party(tree), gp=gpar(cex=1), type = "extended") # Different way to visualize the tree
+
+predictions <- predict(tree, newdata=NHANES, type="class")
+
+table(predictions, NHANES$SleepTrouble)
+
+# Get additional rows of data to run through our tree
+new_NHANES <- NHANES::NHANES[9001:10000,] |> 
+  select(Age, Race3, Work, DaysMentHlthBad, DaysPhysHlthBad,
+         Depressed, SleepHrsNight, SleepTrouble)  |>
+  filter(!is.na(SleepHrsNight), !is.na(DaysPhysHlthBad), !is.na(SleepTrouble))
+glimpse(new_NHANES)
+
+predictions <- predict(tree, newdata=new_NHANES, type="class")
+predictions |> head(n=20)
+
+
+confusion_matrix <- table(predictions, new_NHANES$SleepTrouble)
+confusion_matrix
+
+
+```
