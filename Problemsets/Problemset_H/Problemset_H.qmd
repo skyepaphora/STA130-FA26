@@ -1,0 +1,327 @@
+---
+title: "STA130 - Problem Set G (Fall 2026)"
+author: "YOUR NAME"
+format: pdf
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(broom)
+library(yardstick)
+library(openintro)
+```
+
+# Problem Set Objectives
+
+The weekly problem sets are designed to do the following:
+
+-   Provide structured practice with immediate feedback, allowing students to identify and correct misconceptions early
+-   Build practical data analysis skills through hands-on experience with R, reinforcing statistical concepts through active application
+-   Develop reproducible workflow habits, namely through the use of Quarto to combine code, output, and text.
+
+# Instructions
+
+## How do I check my work
+
+You will access the Problem Set and do your work on JupyterHub (link on Quercus)
+
+When you click `Render` to create a pdf of your solutions, you may get a popup that says "Popup Blocked - We attempted to open an external browser window...". If you get this message, click `Cancel` and then you will be able to open your .pdf file by selecting it in the bottom right window (in the same folder as your .qmd file).
+
+Once you are done with a question and want to check if it is correct, you will need to download your .qmd and .pdf files and upload them to MarkUs to run the tests.
+
+Usually when you do an assignment, you don't find out whether your answers are correct until *after* the deadline, when you get your grade back. However, using MarkUs, you can submit your work before the deadline and run tests to check your solutions!
+
+*Note:* Some parts of some questions may not be covered by tests in MarkUs, but you're still responsible for reviewing the posted solutions and make sure you understand them.
+
+**To download your files from JupyterHub, go to the bottom right window and do the following:**
+
+-   Select the files you want to download (likely .qmd and .pdf)
+-   Click on More $\Rightarrow$ Export
+
+**To upload your work to MarkUs to run the tests:**
+
+-   Go to MarkUs: <https://markus.teach.cs.toronto.edu/markus/courses>
+-   Open the current assignment and upload your file(s) (note that by default, the files you download from JupyterHub will likely be in your `Downloads` folder)
+-   Run the tests
+
+## What to do if a test fails on MarkUs
+
+-   Take a deep breath! Your work won't really be graded until the deadline, so start early to make sure you have lots of time to resolve issues before the deadline.
+-   Read the message to get hints about what the problem is. For example "variable X not present" means that you may have a typo in your variable name.
+-   Search on Piazza to see if other classmates have encountered a similar error (and if not, consider posting a screenshot of the error message)
+-   Come to TA or instructor office hours with your issue
+
+## How do I submit my Problem Set?
+
+You will submit your solutions (.qmd and .pdf) on MarkUs at the link above. You can submit as many times as you like but only your latest submission will be counted.
+
+\newpage
+
+# Problems
+
+## Question 1: Logistic Regression
+
+The `email` dataset, from the `openintro` package, contains data on incoming emails for the first three months of 2012 for one person's gmail account. (His name is David Diez. All other personally identifiable information has been removed.)
+
+```{r}
+glimpse(email)
+```
+
+### (a) \[Motivating the use of logistic regression\] Given this dataset, suppose you want to predict whether an email is junkmail (`spam`), based on how many exclamation marks (!) appeared in the email (`exclaim_mess`). Your friend suggests that you fit a simple linear regression model in order to do so. Briefly describe whether you think this is an appropriate suggestion, and why.
+
+
+
+### (b) \[Identifying an appropriate model equation\] Select the most appropriate population model equation for predicting whether a given email is "spam," based on how many exclamation marks appeared in the text of the email. Below, let $p_i = P(Y_i=1)$ denote the probability that the $i^{th}$ email is spam.
+
+*Hint: if you have trouble reading the* LaTeX (math typesetting code) between the dollar signs, below, try rendering the document and reading the pdf instead. OR: you can place your caret (blinking text cursor) inside the line of interest, and wait for a little preview to pop up.
+
+**A.** $y_i = \beta_0 + \beta_1 x_{i,exclam} + \epsilon$
+
+**B.** $\hat y_i = \hat \beta_0 + \hat\beta_1 x_{i,exclam}$
+
+**C.** $\log\left(\frac{y_i}{1+y_i}\right) = \beta_0 + \beta_1 x_{i,exclam}$
+
+**D.** $\log\left(\frac{y_i}{1+y_i}\right) = \beta_0 + \beta_1 x_{i,exclam} + \epsilon$
+
+**E.** $\log\left(\frac{\hat y_i}{1+\hat y_i}\right) = \hat\beta_0 + \hat\beta_1 x_{i,exclam}$
+
+**F.** $\log\left(\frac{p_i}{1-p_i}\right) = \beta_0 + \beta_1 x_{i,exclam} + \epsilon$
+
+**G.** $\log\left(\frac{p_i}{1-p_i}\right) = \beta_0 + \beta_1 x_{i,exclam}$
+
+**H.** $\log\left(\frac{\hat p_i}{1-\hat p_i}\right) = \hat \beta_0 + \hat \beta_1 x_{i,exclam}$
+
+```{r}
+Q1b_answer <- NULL # e.g. "A"
+```
+
+### (c) \[Fitting a logistic regression model to the data\] Use the `glm` function to fit a logistic regression model in accordance with part (b). Then, use the `tidy()` function to get the estimated coefficients for your selected model. Your final tibble should only include the `term` and `estimate` columns output by `tidy()`.
+
+```{r}
+Q1c_model <- NULL
+Q1c_answer <- NULL
+```
+
+### (d) \[Interpreting the coefficients of the fitted logistic regression model\] Based on your results from part (c), how would you describe the relationship between the occurrence of the exclamation marks in an email, and whether or not the email is spam?
+
+**A.** There is a positive association between the use of exclamation marks and the probability that an email is spam.
+
+**B.** There is a negative association between the use of exclamation marks and the probability that an email is spam.
+
+**C.** For each additional use of exclamation marks, in a given email, we expect a 2.28 percent decrease in the probability of that email being spam.
+
+**D.** For each additional use of exclamation marks, in a given email, the probability of that email being spam increases by 0.225, on average.
+
+**E.** There is not enough information to interpret whether there is an association between the use of exclamation marks and the probability that an email is spam.
+
+```{r}
+Q1d_answer <- NULL # Replace null with your the letter of your selection, in quotation marks (e.g. "A")
+```
+
+### (e) \[Predictions for new data\] The `email_test` dataset provides a new set of observations (emails), for which we can make predictions via the model from part (c). Use the `augment` function to generate and store predicted probabilities for this new dataset.
+
+```{r}
+glimpse(email_test)
+```
+
+```{r}
+Q1e_predictions <- NULL
+```
+
+### (f) \[confusion matrix: c = 0.5\] Below is a function we've defined to compute the confusion matrix for a logistic regression model with new test data, for a given threshold c. Run the code chunk below to see the confusion matrix for the logistic model you've fit, applied to the email_test data as above, with a threshold of 0.5. In other words, for this confusion matrix, we'll predict that an email is spam if the model predicts there is at least a 50% chance that email is spam. Based on this confusion matrix, is c=0.5 a good choice of threshold to predict which emails are spam?
+
+*Hint: Don't worry about the code that builds the confusion matrix function - refer to the class slides for how to apply it.*
+
+```{r}
+# DO NOT MODIFY THIS CODE CHUNK!!!
+# Function to get confusion matrix for any threshold
+get_confusion_matrix_logistic <- function(model, threshold, newdata, positive_class = NULL) {
+  
+  # Get the response variable name from the model
+  response_var <- as.character(formula(model)[[2]])
+  
+  # Get predictions
+  predictions <- augment(model, type.predict = "response", newdata = newdata)
+  
+  # Get unique values of the actual response
+  actual_values <- sort(unique(newdata[[response_var]]), decreasing = TRUE)
+  
+  # If positive_class not specified, use the higher value as positive
+  if (is.null(positive_class)) {
+    positive_class <- actual_values[1]
+  }
+  
+  # Determine negative class
+  negative_class <- setdiff(actual_values, positive_class)
+  
+  # Create predicted class based on threshold
+  predictions <- predictions |>
+    mutate(
+      predicted_class = ifelse(.fitted >= threshold, positive_class, negative_class),
+      actual_class = newdata[[response_var]]  # Add actual values to predictions df
+    )
+  
+  # Create confusion matrix with specified order
+  confusion_matrix <- with(predictions, 
+                          table(Predicted = factor(predicted_class, levels = c(positive_class, negative_class)),
+                                Actual = factor(actual_class, levels = c(positive_class, negative_class))))
+  
+  return(confusion_matrix)
+}
+
+Q1f_cm <- get_confusion_matrix_logistic(
+  Q1c_model, 0.5, newdata=email_test, positive_class=1)
+
+Q1f_cm
+```
+
+
+### (g) \[confusion matrix: c = 0.0936\] In the `email` data, only 9.36% of emails are coded as spam, so a very naive model would be to simply predict that each email has a 9.36% chance of being spam, no matter its features. Use the `get_confusion_matrix_logistic` function for the same model and data that you did in part (f), but change the threshold to $c = 0.0936$. Briefly discuss why the values of your confusion matrix did or did not change from those in part (f).
+
+```{r}
+Q1g_cm <- NULL
+
+Q1g_cm
+```
+
+### (h) \[accuracy, sensitivity, specificity\] Use the confusion matrices from part (f) and (g) to compute the accuracy, sensitivity, and specificity of your model's predictions for the `email_test` dataset. Do not round your answers. Which threshold results in higher sensitivity? Which results in higher specificity? Explain why changing the threshold affects these two measures differently.
+
+```{r}
+Q1h_accuracy_g <- NULL
+
+
+Q1h_sensitivity_g <- NULL
+
+
+
+Q1h_specificity_g <- NULL
+
+
+Q1h_accuracy_f <- NULL
+
+
+Q1h_sensitivity_f <- NULL
+
+
+
+Q1h_specificity_f <- NULL
+
+
+# Replace with "f" or "g"
+Q1h_threshold_higher_sens <- NULL
+
+
+# Replace with "f" or "g"
+Q1h_threshold_higher_spec <- NULL
+
+```
+
+### (Not graded but recommended) \[manually computing confusion matrix elements\] Use the `filter` and `summarise` functions to compute the values for each cell of your prediction's confusion matrix, based on a threshold of $c = 0.0936$. (Note that the variables below use the abbreviations from class, e.g. "TP" = "True Positive", etc.). In this context, since we're trying to detect spam emails, a "positive" means a spam email and a "negative" is a regular email.
+
+```{r}
+q1i_TP <- NULL
+
+q1i_TN <- NULL
+
+q1i_FP <- NULL
+
+q1i_FN <- NULL
+```
+
+## Q2 - Multiple Logistic Regression
+
+Just like with linear regression, we can add multiple predictors to a logistic regression model. The resulting model is naturally called a *multiple logistic regression model,* and it predicts the log-odds of the response as a linear combination of $k>1$ predictors.
+
+### (a) \[Fitting a multiple logistic regression model\] Use the `glm()` function to model `spam` as a function of the following predictors:
+
+-   `exclaim_mess`: (numeric) number of exclamation marks in the email message
+-   `attach`: (numeric) number of attachments
+
+```{r}
+Q2a_model <- NULL
+```
+
+### (b) \[Model coefficients\]
+
+Use the `tidy()` function to get the estimated coefficients for the model you produced in part (a). Your final tibble should only include the `term` and `estimate` columns output by `tidy()`.
+
+```{r}
+Q2b_answer <- NULL
+```
+
+### (c) \[Model predictions\] Use the `augment` function to apply your multiple logistic regression model to the `email_test` data. You do not need to compute a confusion matrix.
+
+```{r}
+Q2c_predictions <- NULL
+```
+
+### (d) Based on the predictions you obtained above for the `email_test` data, which combination of predictors (`exclaim_mess` and `attach`) were associated with the largest predicted probability of being spam? Hint: Use `arrange()` and `select()` with the `Q2c_predictions` object you computed above to find these answers, then type the numerical value for each of the variables below
+
+```{r}
+Q2d_exclaim_mess_value <- NULL
+Q2d_attach_value <- NULL
+
+```
+
+### (e) Using your fitted multiple logistic regression model, predict the probability that an email is spam for each of the following emails. Do not round. Compare the predicted probabilities for emails A and B. What does this tell you about the relationship between exclamation marks and the probability of spam when the number of attachments is held constant? Compare the predicted probabilities for emails B and C. What does this tell you about the relationship between the number of attachments and the probability of spam when the number of exclamation marks is held constant?
+
+| Email | Exclamation marks | Attachments |
+|-------|-------------------|-------------|
+| A     | 0                 | 0           |
+| B     | 5                 | 0           |
+| C     | 5                 | 1           |
+
+```{r}
+Q2e_prob_A <- NULL
+Q2e_prob_B <- NULL
+Q2e_prob_C <- NULL
+```
+
+\newpage
+
+## Q3: ROC curves
+
+```{r}
+modelA <- glm(spam ~ number + winner + number*winner,
+              data = email, family = "binomial")
+modelB <- glm(spam ~ number + exclaim_mess +winner + attach +line_breaks, 
+              data=email, family = "binomial") 
+
+# Get predictions for both models on email_test data
+# Model A
+predictions_modelA <- augment(modelA, 
+                              type.predict = "response", 
+                              newdata = email_test) |>
+  mutate(model = "Model A")
+
+# Model B
+predictions_modelB <- augment(modelB, 
+                              type.predict = "response", 
+                              newdata = email_test) |>
+  mutate(model = "Model B")
+
+# Combine predictions
+all_predictions <- bind_rows(predictions_modelA, predictions_modelB)
+
+# Create ROC curve
+roc_curve_data <- all_predictions |>
+  mutate(spam = factor(spam)) |>
+  group_by(model) |>
+  roc_curve(spam, .fitted, event_level = "second")
+
+# Plot ROC curves
+autoplot(roc_curve_data) +
+  labs(title = "ROC Curves for Logistic Regression Models",
+       x = "False Positive Rate (1 - Specificity)",
+       y = "True Positive Rate (Sensitivity)")
+```
+
+## (a) Based on the above ROC curves, which of the 2 models appears to have the best overall performance for predicting spam emails. In the code chunk below, replace NULL with your answer: "A", "B" or "Not enough information to answer".
+
+```{r}
+Q3a_answer <- NULL
+```
+
+## (b) Suppose you want to catch as many spam emails as possible (high sensitivity), even if it means some regular emails get incorrectly flagged as spam. Looking at Model B's ROC curve, approximately what false positive rate would you need to accept to achieve around 87.5% sensitivity? Explain how you determined your answer based on the plot.
+
